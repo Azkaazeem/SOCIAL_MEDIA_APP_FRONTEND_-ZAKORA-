@@ -155,3 +155,106 @@
         padding: 10px;
     }
 }
+
+/* --- Article Formatting Toolbar Styles --- */
+.shareFormatToolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-top: 12px;
+    margin-bottom: 8px;
+}
+
+.formatBtn {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    font-family: inherit;
+}
+
+.formatBtn:hover {
+    background-color: #ede9fe;
+    border-color: #c7d2fe;
+    color: #4f46e5;
+}
+
+.formatSeparator {
+    color: #cbd5e1;
+    font-size: 14px;
+    user-select: none;
+    margin: 0 2px;
+}
+
+.previewToggleBtn {
+    margin-left: auto;
+    font-weight: 600;
+    font-size: 12px;
+    background-color: #f1f5f9;
+}
+
+.previewToggleBtn.active {
+    background-color: #4f46e5;
+    color: #ffffff;
+    border-color: #4f46e5;
+}
+
+.shareArticleTextarea {
+    min-height: 160px;
+    resize: vertical;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #1f2937;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.shareArticleTextarea:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.articlePreviewContainer {
+    min-height: 160px;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px 16px;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.articlePreviewHeader {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.shareOptionActive {
+    background-color: #ecfdf5;
+    border-radius: 8px;
+}

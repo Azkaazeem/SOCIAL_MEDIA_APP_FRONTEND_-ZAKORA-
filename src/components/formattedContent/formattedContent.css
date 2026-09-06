@@ -1,0 +1,68 @@
+.formattedContent {
+  font-family: inherit;
+  color: inherit;
+  line-height: 1.65;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.fcHeading1 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 14px 0 8px 0;
+  line-height: 1.3;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 4px;
+}
+
+.fcHeading2 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 12px 0 6px 0;
+  line-height: 1.3;
+}
+
+.fcQuote {
+  margin: 10px 0;
+  padding: 8px 14px;
+  background-color: #f8fafc;
+  border-left: 4px solid #4f46e5;
+  border-radius: 0 8px 8px 0;
+  color: #4b5563;
+  font-style: italic;
+}
+
+.fcList {
+  margin: 8px 0;
+  padding-left: 24px;
+  list-style-type: disc;
+}
+
+.fcList li {
+  margin-bottom: 4px;
+  color: inherit;
+}
+
+.fcParagraph {
+  margin: 0 0 6px 0;
+}
+
+.fcParagraph:last-child {
+  margin-bottom: 0;
+}
+
+.fcEmptyLine {
+  height: 8px;
+}
+
+.fcInlineCode {
+  background-color: #f1f5f9;
+  color: #e11d48;
+  font-family: monospace;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  border: 1px solid #e2e8f0;
+}

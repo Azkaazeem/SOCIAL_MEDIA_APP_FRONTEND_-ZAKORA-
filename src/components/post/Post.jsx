@@ -1,12 +1,15 @@
 import { useState , useEffect, useContext } from 'react';
 import './post.css'
-import { MoreVert, Favorite, FavoriteBorder } from '@mui/icons-material';
+import { MoreVert, Favorite, FavoriteBorder, Chat } from '@mui/icons-material';
 import axios from "axios";
 import { format } from "timeago.js";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from '../../context/AuthContext';
 import { SocketContext } from '../../context/SocketContext';
 import Swal from 'sweetalert2';
+import AutoPlayVideo from '../videoPlayer/AutoPlayVideo';
+import FormattedContent from '../formattedContent/FormattedContent';
+import Comments from '../comments/Comments';
 
 const Post = ({ post }) => {
   const [like, setLike] = useState(post.likes.length);
@@ -14,6 +17,8 @@ const Post = ({ post }) => {
   const [user, setUser] = useState({});
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
+  const [showComments, setShowComments] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
 
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
   const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : null;
@@ -32,6 +37,20 @@ const Post = ({ post }) => {
     };
     fetchUser();
   }, [post.userId]);
+
+  useEffect(() => {
+    const fetchCommentCount = async () => {
+      try {
+        const res = await axios.get(`/comments/post/${post._id}`);
+        setCommentCount(res.data.length);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    if (post._id) {
+      fetchCommentCount();
+    }
+  }, [post._id]);
 
   const likeHandler = async () => {
     if (!currentUser) {
@@ -120,7 +139,9 @@ const Post = ({ post }) => {
         </div>
 
         <div className="postCenter">
-          <div className="postText" style={{ whiteSpace: "pre-wrap", wordBreak: "break-word", overflowWrap: "anywhere" }}>{post?.desc}</div>
+          <div className="postText">
+            <FormattedContent content={post?.desc} />
+          </div>
           
           {post.img && typeof post.img === "string" && (
             <img src={resolvePath(post.img)} alt="" className="postImg" />
@@ -149,7 +170,7 @@ const Post = ({ post }) => {
           {post.video && Array.isArray(post.video) && post.video.length > 0 && (
             <div className="postVideosContainer" style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" }}>
               {post.video.map((videoName, i) => (
-                <video key={i} src={resolvePath(videoName)} controls crossOrigin="anonymous" preload="metadata" className="postImg" style={{ margin: 0, backgroundColor: "#000" }} />
+                <AutoPlayVideo key={i} src={resolvePath(videoName)} />
               ))}
             </div>
           )}
@@ -165,10 +186,26 @@ const Post = ({ post }) => {
             <span className='postLikeCounter'>{like} people like it</span>
           </div>
 
-          <div className="postBottomRight not-functional">
-            <span className="postCommentText">{post.comment} comments</span>
+          <div 
+            className="postBottomRight"
+            onClick={() => setShowComments(!showComments)}
+            style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}
+            title={showComments ? "Hide comments" : "Show comments"}
+          >
+            <Chat style={{ fontSize: "18px", color: "#6b7280" }} />
+            <span className="postCommentText">
+              {commentCount} {commentCount === 1 ? "comment" : "comments"}
+            </span>
           </div>
         </div>
+
+        {/* Comments Thread Section */}
+        {showComments && (
+          <Comments
+            postId={post._id}
+            onCommentCountChange={(newCount) => setCommentCount(newCount)}
+          />
+        )}
       </div>
     </div>
   )
