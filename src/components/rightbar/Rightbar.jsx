@@ -99,10 +99,13 @@ const Rightbar = ({ user }) => {
         dispatch({ type: "FOLLOW", payload: user._id });
         if (socket) {
           socket.emit("sendNotification", {
+            senderId: currentUser._id,
             senderName: currentUser.username,
             senderProfilePicture: currentUser.profilePicture,
+            receiverId: user._id,
             receiverName: user.username,
             type: "follow",
+            text: "started following you.",
           });
         }
       }
@@ -123,10 +126,13 @@ const Rightbar = ({ user }) => {
       dispatch({ type: "FOLLOW", payload: c._id });
       if (socket) {
         socket.emit("sendNotification", {
+          senderId: currentUser._id,
           senderName: currentUser.username,
           senderProfilePicture: currentUser.profilePicture,
+          receiverId: c._id,
           receiverName: c.username,
           type: "follow",
+          text: "started following you.",
         });
       }
       if (user?._id === currentUser._id) {

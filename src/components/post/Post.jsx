@@ -76,11 +76,14 @@ const Post = ({ post }) => {
       // If we are liking the post (and it's not our own post)
       if (!isLiked && socket && currentUser._id !== post.userId) {
         socket.emit("sendNotification", {
+          senderId: currentUser._id,
           senderName: currentUser.username,
           senderProfilePicture: currentUser.profilePicture,
+          receiverId: post.userId,
           receiverName: user.username,
           type: "like",
           postId: post._id,
+          text: "liked your post.",
         });
       }
     } catch (err) {

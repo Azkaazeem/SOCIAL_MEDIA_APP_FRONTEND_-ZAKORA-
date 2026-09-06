@@ -6,10 +6,17 @@ import { AuthContext } from "../../context/AuthContext";
 import Sidebar from "../sidebar/Sidebar";
 import Swal from 'sweetalert2';
 import { SocketContext } from "../../context/SocketContext";
+import { format } from "timeago.js";
 
 const Topbar = () => {
   const { user, dispatch } = useContext(AuthContext);
-  const { notifications, setNotifications } = useContext(SocketContext);
+  const { 
+    notifications, 
+    markAsRead, 
+    markAllAsRead, 
+    deleteNotification, 
+    clearAllNotifications 
+  } = useContext(SocketContext);
   const PF = import.meta.env.VITE_PUBLIC_FOLDER;
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -73,6 +80,22 @@ const Topbar = () => {
     });
   };
 
+  const getNotificationText = (n) => {
+    if (n.text) return n.text;
+    switch (n.type) {
+      case "like":
+        return "liked your post.";
+      case "comment":
+        return "commented on your post.";
+      case "reply":
+        return "replied to your comment.";
+      case "follow":
+        return "started following you.";
+      default:
+        return "interacted with you.";
+    }
+  };
+
   const handleNotificationClick = () => {
     if (!user) {
       Swal.fire({
@@ -89,6 +112,18 @@ const Topbar = () => {
       return;
     }
     setOpenNotifications(!openNotifications);
+  };
+
+  const handleItemClick = (n) => {
+    setOpenNotifications(false);
+    if (markAsRead) {
+      markAsRead(n._id || n.id);
+    }
+    if ((n.type === "like" || n.type === "comment" || n.type === "reply") && n.postId) {
+      navigate(`/post/${n.postId}`);
+    } else if (n.senderName) {
+      navigate(`/profile/${n.senderName}`);
+    }
   };
 
   const unreadCount = (notifications || []).filter(n => !n.isRead).length;
@@ -143,48 +178,76 @@ const Topbar = () => {
               {openNotifications && (
                 <div 
                   className="notificationsDropdown" 
-                  style={{ position: "absolute", top: "45px", right: "-10px", backgroundColor: "white", color: "black", width: "320px", borderRadius: "10px", boxShadow: "0px 0px 15px -10px rgba(0,0,0,0.75)", zIndex: 999, padding: "15px", maxHeight: "400px", overflowY: "auto" }}
+                  style={{ position: "absolute", top: "45px", right: "-10px", backgroundColor: "white", color: "black", width: "340px", maxWidth: "90vw", borderRadius: "10px", boxShadow: "0px 10px 25px -5px rgba(0,0,0,0.15)", zIndex: 999, padding: "15px", maxHeight: "420px", overflowY: "auto", border: "1px solid #f1f5f9" }}
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #ddd", paddingBottom: "10px", marginBottom: "10px" }}>
-                    <h4 style={{ margin: 0, fontSize: "16px", color: "#333" }}>Notifications</h4>
-                    {(notifications || []).length > 0 && (
-                      <span onClick={(e) => { e.stopPropagation(); setNotifications([]); }} style={{ fontSize: "12px", color: "#ef4444", cursor: "pointer", fontWeight: "600" }}>Clear All</span>
-                    )}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #e2e8f0", paddingBottom: "10px", marginBottom: "10px" }}>
+                    <h4 style={{ margin: 0, fontSize: "15px", fontWeight: "700", color: "#1e293b" }}>Notifications</h4>
+                    <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                      {unreadCount > 0 && (
+                        <span 
+                          onClick={(e) => { e.stopPropagation(); markAllAsRead && markAllAsRead(); }} 
+                          style={{ fontSize: "12px", color: "#4f46e5", cursor: "pointer", fontWeight: "600" }}
+                        >
+                          Mark all read
+                        </span>
+                      )}
+                      {(notifications || []).length > 0 && (
+                        <span 
+                          onClick={(e) => { e.stopPropagation(); clearAllNotifications && clearAllNotifications(); }} 
+                          style={{ fontSize: "12px", color: "#ef4444", cursor: "pointer", fontWeight: "600" }}
+                        >
+                          Clear All
+                        </span>
+                      )}
+                    </div>
                   </div>
                   
                   {(notifications || []).length === 0 ? (
-                    <span style={{ fontSize: "14px", color: "gray", display: "block", textAlign: "center", margin: "20px 0" }}>No new notifications</span>
+                    <span style={{ fontSize: "14px", color: "#94a3b8", display: "block", textAlign: "center", margin: "25px 0" }}>No new notifications</span>
                   ) : (
                     notifications.map((n, i) => (
-                      <div key={n.id || i} style={{ display: "flex", alignItems: "center", padding: "10px", borderBottom: "1px solid #eee", gap: "10px", cursor: "pointer", backgroundColor: n.isRead ? "white" : "#fce4ec", borderRadius: "8px", marginBottom: "5px" }} onClick={() => { 
-                          setOpenNotifications(false); 
-                          setNotifications(prev => prev.map(item => item.id === n.id ? { ...item, isRead: true } : item));
-                          if (n.type === "like" && n.postId) {
-                            navigate(`/post/${n.postId}`);
-                          } else {
-                            navigate(`/profile/${n.senderName}`); 
-                          }
-                        }}>
+                      <div 
+                        key={n._id || n.id || i} 
+                        style={{ 
+                          display: "flex", 
+                          alignItems: "center", 
+                          padding: "10px", 
+                          borderBottom: "1px solid #f1f5f9", 
+                          gap: "10px", 
+                          cursor: "pointer", 
+                          backgroundColor: n.isRead ? "white" : "#eef2ff", 
+                          borderRadius: "8px", 
+                          marginBottom: "5px",
+                          transition: "background-color 0.2s ease"
+                        }} 
+                        onClick={() => handleItemClick(n)}
+                      >
                         <img 
                           src={n.senderProfilePicture ? resolvePath(n.senderProfilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg"} 
                           alt="" 
-                          style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} 
+                          style={{ width: "38px", height: "38px", borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} 
                           onClick={(e) => {
                             e.stopPropagation();
                             setOpenNotifications(false);
-                            setNotifications(prev => prev.map(item => item.id === n.id ? { ...item, isRead: true } : item));
+                            if (markAsRead) markAsRead(n._id || n.id);
                             navigate(`/profile/${n.senderName}`);
                           }}
                         />
                         <div style={{ flex: 1, fontSize: "13px", lineHeight: "1.4" }}>
-                          <span style={{ fontWeight: "bold" }}>{n.senderName}</span> {n.type === "like" ? "liked your post." : "started following you."}
+                          <div>
+                            <span style={{ fontWeight: "600", color: "#1e293b" }}>{n.senderName}</span>{" "}
+                            <span style={{ color: "#475569" }}>{getNotificationText(n)}</span>
+                          </div>
+                          <div style={{ fontSize: "11px", color: "#94a3b8", marginTop: "2px" }}>
+                            {n.createdAt ? format(n.createdAt) : "Just now"}
+                          </div>
                         </div>
                         <Close 
-                          style={{ fontSize: "24px", color: "#ef4444", padding: "5px", cursor: "pointer" }} 
+                          style={{ fontSize: "18px", color: "#94a3b8", padding: "3px", cursor: "pointer", flexShrink: 0 }} 
                           onClick={(e) => {
                             e.stopPropagation();
-                            setNotifications((prev) => prev.filter((item) => item.id !== n.id));
+                            if (deleteNotification) deleteNotification(n._id || n.id);
                           }} 
                         />
                       </div>
@@ -219,7 +282,15 @@ const Topbar = () => {
           </form>
         </div>
         <div className="mobileRight">
-          <Chat className="mobileMessageIcon not-functional" />
+          <div 
+            className="topbarIconItem" 
+            onClick={handleNotificationClick} 
+            style={{cursor: "pointer", position: "relative", display: "flex", alignItems: "center"}}
+            title="Notifications"
+          >
+            <Notifications style={{ fontSize: "22px", color: "white" }} />
+            {unreadCount > 0 && <span className="topbarIconBadge">{unreadCount}</span>}
+          </div>
           <Link to={profileLink} style={{display: "flex"}}>
             <img src={profileImage} alt="" className="mobileAvatarImg" />
           </Link>
