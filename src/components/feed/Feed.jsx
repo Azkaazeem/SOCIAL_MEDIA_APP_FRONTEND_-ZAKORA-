@@ -14,18 +14,28 @@ const Feed = ({ username }) => {
 
   const fetchPosts = async () => {
     try {
-      const res = username
-        ? await axios.get("/posts/profile/" + username)
+      const validUsername = username && username !== "undefined" ? username.trim() : null;
+      const res = validUsername
+        ? await axios.get("/posts/profile/" + encodeURIComponent(validUsername))
         : await axios.get("/posts/all");
       
-      const usersRes = await axios.get("/users/all");
       const usersMap = {};
-      usersRes.data.forEach(u => usersMap[u._id] = u.username);
+      try {
+        const usersRes = await axios.get("/users/all");
+        if (Array.isArray(usersRes?.data)) {
+          usersRes.data.forEach(u => {
+            if (u?._id) usersMap[u._id] = u.username;
+          });
+        }
+      } catch (uErr) {
+        // non-blocking
+      }
       
-      const postsWithMetadata = res.data.map(p => ({
+      const rawPosts = Array.isArray(res?.data) ? res.data : [];
+      const postsWithMetadata = rawPosts.map(p => ({
         ...p,
         username: usersMap[p.userId] || "",
-        timeString: format(p.createdAt)
+        timeString: p.createdAt ? format(p.createdAt) : ""
       }));
 
       const now = new Date();
@@ -52,7 +62,8 @@ const Feed = ({ username }) => {
 
       setPosts([...newLocalPosts, ...otherPosts]);
     } catch (err) {
-      console.error("Failed to fetch posts:", err);
+      console.warn("Could not fetch posts:", err?.message || err);
+      setPosts([]);
     }
   };
 

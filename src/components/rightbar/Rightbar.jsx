@@ -9,7 +9,7 @@ import { Add, Remove, Edit } from "@mui/icons-material";
 import Swal from "sweetalert2";
 
 const Rightbar = ({ user }) => {
-  const PF = import.meta.env.VITE_PUBLIC_FOLDER;
+  const PF = import.meta.env.VITE_PUBLIC_FOLDER || "/assets/";
   const navigate = useNavigate();
   const [friends, setFriends] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
@@ -163,7 +163,7 @@ const Rightbar = ({ user }) => {
     setEditData({ ...editData, [e.target.name]: e.target.value });
   };
 
-  const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
+  const resolvePath = (path) => path ? (path.startsWith("http") ? path : (PF.endsWith("/") ? PF : PF + "/") + (path.startsWith("/") ? path.slice(1) : path)) : "";
 
   const renderConnectionSection = (title, list) => {
     return (
@@ -181,7 +181,7 @@ const Rightbar = ({ user }) => {
               <div key={c._id} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <Link style={{ textDecoration: "none", color: "black" }} to={"/profile/" + c.username}>
                   <div className="rightbarFollowing">
-                    <img src={c.profilePicture ? resolvePath(c.profilePicture) : PF + "person/noAvatar.jpg"} alt="" className="rightbarFollowingImg" />
+                    <img src={c.profilePicture ? resolvePath(c.profilePicture) : "/assets/person/noAvatar.jpg"} alt="" className="rightbarFollowingImg" />
                     <span className="rightbarFollowingName">{c.username}</span>
                   </div>
                 </Link>
@@ -365,7 +365,7 @@ const Rightbar = ({ user }) => {
           </div>
         )}
 
-        <img src="assets/ad.png" alt="" className="rightbarAd" />
+        <img src="/assets/ad.png" alt="" className="rightbarAd" />
 
         {currentUser && (
           <>

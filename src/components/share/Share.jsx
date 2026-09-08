@@ -7,7 +7,7 @@ import FormattedContent from "../formattedContent/FormattedContent";
 
 const Share = () => {
     const { user } = useContext(AuthContext);
-    const PF = import.meta.env.VITE_PUBLIC_FOLDER;
+    const PF = import.meta.env.VITE_PUBLIC_FOLDER || "/assets/";
     const desc = useRef();
     const articleTextareaRef = useRef();
     const [articleText, setArticleText] = useState("");
@@ -98,7 +98,7 @@ const Share = () => {
         }
     };
 
-    const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
+    const resolvePath = (path) => path ? (path.startsWith("http") ? path : (PF.endsWith("/") ? PF : PF + "/") + (path.startsWith("/") ? path.slice(1) : path)) : "";
 
     return (
         <div className="share">

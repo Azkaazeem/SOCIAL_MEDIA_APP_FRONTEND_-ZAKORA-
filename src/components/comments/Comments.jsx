@@ -25,8 +25,8 @@ const Comments = ({ postId, onCommentCountChange }) => {
 
   const { user: currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const PF = import.meta.env.VITE_PUBLIC_FOLDER;
-  const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
+  const PF = import.meta.env.VITE_PUBLIC_FOLDER || "/assets/";
+  const resolvePath = (path) => path ? (path.startsWith("http") ? path : (PF.endsWith("/") ? PF : PF + "/") + (path.startsWith("/") ? path.slice(1) : path)) : "";
 
   const defaultAvatar = "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg";
 

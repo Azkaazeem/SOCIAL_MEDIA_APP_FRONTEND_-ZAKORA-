@@ -20,8 +20,8 @@ const Post = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
 
-  const PF = import.meta.env.VITE_PUBLIC_FOLDER;
-  const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : null;
+  const PF = import.meta.env.VITE_PUBLIC_FOLDER || "/assets/";
+  const resolvePath = (path) => path ? (path.startsWith("http") ? path : (PF.endsWith("/") ? PF : PF + "/") + (path.startsWith("/") ? path.slice(1) : path)) : null;
   const { user: currentUser } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
   const navigate = useNavigate();
@@ -31,11 +31,20 @@ const Post = ({ post }) => {
   }, [currentUser?._id, post.likes]);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchUser = async () => {
-      const res = await axios.get(`/users?userId=${post.userId}`);
-      setUser(res.data);
+      if (!post?.userId) return;
+      try {
+        const res = await axios.get(`/users?userId=${post.userId}`);
+        if (isMounted && res.data) {
+          setUser(res.data);
+        }
+      } catch (err) {
+        // Suppress unhandled errors if post author is deleted or not found
+      }
     };
     fetchUser();
+    return () => { isMounted = false; };
   }, [post.userId]);
 
   useEffect(() => {

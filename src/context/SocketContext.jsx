@@ -134,20 +134,44 @@ export const SocketContextProvider = ({ children }) => {
 
   // Real-time Socket Connection
   useEffect(() => {
-    if (user) {
-      const SOCKET_URL = import.meta.env.PROD
-        ? "https://social-media-app-backend-l94r39p6n-azka-azeems-projects.vercel.app"
-        : "http://localhost:8800";
+    if (!user) {
+      if (socket) {
+        socket.disconnect();
+        setSocket(null);
+      }
+      return;
+    }
 
+    // Vercel Serverless Functions do not support persistent WebSockets/Socket.IO.
+    // If running in production without a dedicated external WebSocket server (e.g. on Render/Railway),
+    // we bypass socket.io to eliminate continuous console errors.
+    // Notifications continue working reliably via the 12-second REST polling above.
+    const customSocketUrl = import.meta.env.VITE_SOCKET_URL;
+    const isVercelHost = import.meta.env.PROD && !customSocketUrl;
+
+    if (isVercelHost) {
+      // In Vercel production, socket connection is bypassed in favor of REST polling
+      return;
+    }
+
+    const SOCKET_URL = customSocketUrl || (import.meta.env.PROD
+      ? "https://social-media-app-backend-azka-azeems-projects.vercel.app"
+      : "http://localhost:8800");
+
+    try {
       const newSocket = io(SOCKET_URL, {
         transports: ["websocket", "polling"],
-        reconnectionAttempts: 5,
-        reconnectionDelay: 2000,
+        reconnectionAttempts: 3,
+        reconnectionDelay: 3000,
+        timeout: 5000,
       });
-      setSocket(newSocket);
 
       newSocket.on("connect", () => {
         newSocket.emit("newUser", user.username);
+      });
+
+      newSocket.on("connect_error", () => {
+        // Silently handle serverless/offline connection errors
       });
 
       newSocket.on("getNotification", (data) => {
@@ -173,14 +197,13 @@ export const SocketContextProvider = ({ children }) => {
         showToastNotification(formattedNotif);
       });
 
+      setSocket(newSocket);
+
       return () => {
         newSocket.disconnect();
       };
-    } else {
-      if (socket) {
-        socket.disconnect();
-        setSocket(null);
-      }
+    } catch (err) {
+      // Non-blocking socket error
     }
   }, [user]);
 

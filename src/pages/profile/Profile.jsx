@@ -10,18 +10,28 @@ import { AuthContext } from "../../context/AuthContext";
 import { AddAPhoto } from "@mui/icons-material";
 
 const Profile = () => {
-  const PF = import.meta.env.VITE_PUBLIC_FOLDER;
+  const PF = import.meta.env.VITE_PUBLIC_FOLDER || "/assets/";
   const [user, setUser] = useState({});
   const { username } = useParams();
   const { user: currentUser, dispatch } = useContext(AuthContext);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchUser = async () => {
-      const res = await axios.get(`/users?username=${username}`);
-      setUser(res.data);
+      const validUsername = username && username !== "undefined" ? username.trim() : null;
+      if (!validUsername) return;
+      try {
+        const res = await axios.get(`/users?username=${encodeURIComponent(validUsername)}`);
+        if (isMounted && res.data) {
+          setUser(res.data);
+        }
+      } catch (err) {
+        console.warn("Could not load user profile:", err?.message || err);
+      }
     };
     fetchUser();
-  }, [username, currentUser]) // added currentUser to dep array so if we update current user, profile re-renders
+    return () => { isMounted = false; };
+  }, [username, currentUser]);
 
   const handleImageUpdate = async (e, type) => {
     const file = e.target.files[0];
@@ -47,7 +57,7 @@ const Profile = () => {
     }
   }
 
-  const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
+  const resolvePath = (path) => path ? (path.startsWith("http") ? path : (PF.endsWith("/") ? PF : PF + "/") + (path.startsWith("/") ? path.slice(1) : path)) : "";
   const isOwnProfile = Boolean(currentUser && username === currentUser.username);
   const coverImage = user.coverPicture ? resolvePath(user.coverPicture) : "https://i.pinimg.com/1200x/d6/94/05/d694055779c0a17614c27f1acc017738.jpg";
   const profileImage = user.profilePicture ? resolvePath(user.profilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg";

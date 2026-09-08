@@ -3,8 +3,8 @@ import "./online.css"
 import React from 'react'
 
 export const Online = ({user}) => {
-    const PF = import.meta.env.VITE_PUBLIC_FOLDER;
-    const resolvePath = (path) => path ? (path.startsWith("http") ? path : PF + path) : "";
+    const PF = import.meta.env.VITE_PUBLIC_FOLDER || "/assets/";
+    const resolvePath = (path) => path ? (path.startsWith("http") ? path : (PF.endsWith("/") ? PF : PF + "/") + (path.startsWith("/") ? path.slice(1) : path)) : "";
 
     return (
         <li className="rightbarFriend">
