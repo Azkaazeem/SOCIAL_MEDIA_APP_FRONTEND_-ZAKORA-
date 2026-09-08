@@ -1,13 +1,14 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { 
   Close, 
   Send, 
   ContentCopy, 
   Check, 
   AutoAwesome,
-  SmartToy
+  Person
 } from "@mui/icons-material";
 import axios from "axios";
+import { AuthContext } from "../../context/AuthContext";
 import "./aiAgent.css";
 
 const AI_PIC = "/assets/AI.jpg";
@@ -16,20 +17,26 @@ const INITIAL_MESSAGES = [
   {
     id: 1,
     sender: "bot",
-    text: "Hello! 👋 I'm **Zakora AI**, your personal creative assistant. Need help writing an engaging post caption, brainstorming ideas, or creating hashtags? Just ask me!",
+    text: "Hi! I'm Zakora's Agent. Ask me anything about Zakora, its features, posts, captions or how to connect with friends.",
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   }
 ];
 
 const SUGGESTIONS = [
-  "✨ Write a catchy caption for my new photo",
+  "✨ Write a catchy caption for my post",
   "💡 Give me 4 creative post ideas",
-  "🏷️ Generate trending hashtags for social media",
-  "ℹ️ Tell me what ZakoraSocial is about"
+  "🏷️ Recommend trending hashtags",
+  "🌐 What can I do on ZakoraSocial?"
 ];
 
 const AiAgent = () => {
+  const { user } = useContext(AuthContext);
+  const PF = import.meta.env.VITE_PUBLIC_FOLDER || "/assets/";
+  const resolvePath = (path) => path ? (path.startsWith("http") ? path : (PF.endsWith("/") ? PF : PF + "/") + (path.startsWith("/") ? path.slice(1) : path)) : "";
+  const userAvatarUrl = user?.profilePicture ? resolvePath(user.profilePicture) : null;
+
   const [isOpen, setIsOpen] = useState(false);
+  const [showBubble, setShowBubble] = useState(true);
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,6 +51,16 @@ const AiAgent = () => {
       inputRef.current?.focus();
     }
   }, [isOpen, messages, loading]);
+
+  const handleOpenChat = () => {
+    setIsOpen(true);
+    setShowBubble(false);
+  };
+
+  const handleDismissBubble = (e) => {
+    e.stopPropagation();
+    setShowBubble(false);
+  };
 
   const handleSend = async (messageText) => {
     const textToSend = (messageText || input).trim();
@@ -71,7 +88,7 @@ const AiAgent = () => {
         history: historyPayload
       });
 
-      const botReply = res.data?.reply || "I'm here to help with your social media posts!";
+      const botReply = res.data?.reply || "I'm here to help with your questions!";
 
       const botMsg = {
         id: Date.now() + 1,
@@ -113,24 +130,58 @@ const AiAgent = () => {
 
   return (
     <div className="aiAgentWrapper">
-      {/* Floating Action Button */}
+      {/* Floating Action Trigger & Speech Bubble */}
       {!isOpen && (
-        <button
-          className="aiFloatingBtn"
-          onClick={() => setIsOpen(true)}
-          title="Chat with Zakora AI"
-          aria-label="Open AI Assistant"
-        >
-          <img 
-            src={AI_PIC} 
-            alt="AI" 
-            className="aiFloatingImg"
-            onError={(e) => {
-              e.target.style.display = 'none';
-            }}
-          />
-          <span className="aiFloatingText">Zakora AI</span>
-        </button>
+        <div className="aiFloatingContainer">
+          {showBubble && (
+            <div className="aiSpeechBubble" onClick={handleOpenChat}>
+              <button
+                type="button"
+                className="aiBubbleCloseBtn"
+                onClick={handleDismissBubble}
+                title="Dismiss"
+                aria-label="Dismiss speech bubble"
+              >
+                <Close style={{ fontSize: "15px" }} />
+              </button>
+              
+              <div className="aiBubbleAvatarWrap">
+                <img 
+                  src={AI_PIC} 
+                  alt="Zakora's Agent" 
+                  className="aiBubbleAvatarImg"
+                  onError={(e) => { e.target.src = "/assets/logo.png"; }}
+                />
+              </div>
+              
+              <div className="aiBubbleContent">
+                <div className="aiBubbleTitle">ZAKORA'S AGENT</div>
+                <p className="aiBubbleText">
+                  Click here to ask anything about Zakora, features, posts or ideas.
+                </p>
+              </div>
+
+              {/* Speech bubble pointer tail pointing down */}
+              <div className="aiBubbleTail" />
+            </div>
+          )}
+
+          <button
+            type="button"
+            className="aiCircleTriggerBtn"
+            onClick={handleOpenChat}
+            title="Chat with Zakora's Agent"
+            aria-label="Open AI Assistant"
+          >
+            <img 
+              src={AI_PIC} 
+              alt="Zakora's Agent" 
+              className="aiCircleTriggerImg"
+              onError={(e) => { e.target.src = "/assets/logo.png"; }}
+            />
+            <span className="aiOnlineBadge" />
+          </button>
+        </div>
       )}
 
       {/* Chat Window Modal */}
@@ -138,33 +189,18 @@ const AiAgent = () => {
         <div className="aiChatWindow">
           {/* Header */}
           <div className="aiHeader">
-            <div className="aiHeaderLeft">
-              <div className="aiAvatar">
-                <img 
-                  src={AI_PIC} 
-                  alt="AI" 
-                  className="aiHeaderAvatarImg"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              </div>
-              <div>
-                <h3 className="aiTitle">Zakora AI Assistant</h3>
-                <span className="aiStatus">
-                  <span className="aiStatusDot"></span> Online & Ready
-                </span>
-              </div>
+            <div className="aiHeaderInfo">
+              <h3 className="aiTitle">ZAKORA'S AGENT</h3>
+              <p className="aiSubtitle">Ask about Zakora, features, posts or ideas</p>
             </div>
-            <div className="aiHeaderActions">
-              <button
-                className="aiHeaderBtn"
-                onClick={() => setIsOpen(false)}
-                title="Close"
-              >
-                <Close style={{ fontSize: "20px" }} />
-              </button>
-            </div>
+            <button
+              className="aiHeaderCloseBtn"
+              onClick={() => setIsOpen(false)}
+              title="Close"
+              aria-label="Close"
+            >
+              <Close style={{ fontSize: "20px" }} />
+            </button>
           </div>
 
           {/* Messages Container */}
@@ -186,6 +222,7 @@ const AiAgent = () => {
                     />
                   </div>
                 )}
+                
                 <div className={`aiBubble ${m.sender === "user" ? "userBubble" : "botBubble"}`}>
                   <div className="aiBubbleText">{m.text}</div>
                   <div className="aiBubbleFooter">
@@ -211,6 +248,21 @@ const AiAgent = () => {
                     )}
                   </div>
                 </div>
+
+                {m.sender === "user" && (
+                  <div className="aiUserAvatar">
+                    {userAvatarUrl ? (
+                      <img 
+                        src={userAvatarUrl} 
+                        alt="You" 
+                        className="aiUserAvatarImg"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    ) : (
+                      <Person style={{ fontSize: "22px", color: "#ffffff" }} />
+                    )}
+                  </div>
+                )}
               </div>
             ))}
 
@@ -241,7 +293,7 @@ const AiAgent = () => {
           {messages.length <= 2 && (
             <div className="aiSuggestions">
               <div className="aiSuggestionsTitle">
-                <AutoAwesome style={{ fontSize: "14px" }} /> Try asking:
+                <AutoAwesome style={{ fontSize: "13px" }} /> Try asking:
               </div>
               <div className="aiChipsContainer">
                 {SUGGESTIONS.map((s, idx) => (
@@ -269,7 +321,7 @@ const AiAgent = () => {
               ref={inputRef}
               type="text"
               className="aiInput"
-              placeholder="Ask Zakora AI for captions, ideas..."
+              placeholder="Type your question..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -280,7 +332,7 @@ const AiAgent = () => {
               disabled={!input.trim() || loading}
               title="Send"
             >
-              <Send style={{ fontSize: "18px" }} />
+              <Send style={{ fontSize: "19px" }} />
             </button>
           </form>
         </div>

@@ -6,55 +6,36 @@
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* --- Floating Button (Solid Theme) --- */
-.aiFloatingBtn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background-color: #4f46e5;
-  color: #ffffff;
-  border: none;
-  padding: 8px 18px 8px 10px;
-  border-radius: 35px;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.35);
-  transition: all 0.25s ease;
+/* --- Floating Keyframe Animations --- */
+/* Smooth up-and-down floating for the message box */
+@keyframes msgBoxFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
-.aiFloatingBtn:hover {
-  background-color: #4338ca;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.45);
+/* Gentle up-and-down floating for circular avatars */
+@keyframes avatarFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
-.aiFloatingImg {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ffffff;
-  display: block;
-  background-color: #ffffff;
-}
-
-.aiFloatingText {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-}
-
-/* --- Chat Window --- */
-.aiChatWindow {
-  width: 380px;
-  height: 540px;
-  background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18), 0 0 1px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid #e2e8f0;
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes slideUp {
@@ -68,36 +49,151 @@
   }
 }
 
-/* --- Header (Solid Theme) --- */
-.aiHeader {
-  background-color: #4f46e5;
-  color: #ffffff;
-  padding: 14px 18px;
+/* --- Floating Container & Trigger --- */
+.aiFloatingContainer {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  position: relative;
 }
 
-.aiHeaderLeft {
+/* --- Speech Bubble Invitation Card (Exterior) --- */
+.aiSpeechBubble {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 12px 14px;
+  background-color: #0f172a;
+  border: 1.5px solid rgba(99, 102, 241, 0.45);
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(79, 70, 229, 0.25);
+  cursor: pointer;
+  max-width: 310px;
+  position: relative;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1), msgBoxFloat 3.5s ease-in-out infinite 0.3s;
+  user-select: none;
 }
 
-.aiAvatar {
-  width: 38px;
-  height: 38px;
+.aiSpeechBubble:hover {
+  animation-play-state: paused;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), 0 0 28px rgba(99, 102, 241, 0.4);
+  border-color: rgba(99, 102, 241, 0.8);
+}
+
+/* Speech Bubble Downward Tail Pointer */
+.aiBubbleTail {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  right: 26px;
+  width: 12px;
+  height: 12px;
+  background-color: #0f172a;
+  border-right: 1.5px solid rgba(99, 102, 241, 0.45);
+  border-bottom: 1.5px solid rgba(99, 102, 241, 0.45);
+  transform: rotate(45deg);
+}
+
+.aiSpeechBubble:hover .aiBubbleTail {
+  border-color: rgba(99, 102, 241, 0.8);
+}
+
+/* Speech Bubble Close Button */
+.aiBubbleCloseBtn {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: #94a3af;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  background-color: #ffffff;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  flex-shrink: 0;
+  transition: all 0.2s ease;
+  z-index: 2;
 }
 
-.aiHeaderAvatarImg {
+.aiBubbleCloseBtn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Bubble Avatar (floating animation) */
+.aiBubbleAvatarWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(99, 102, 241, 0.65);
+  background-color: #1e293b;
+  box-shadow: 0 0 12px rgba(79, 70, 229, 0.35);
+  animation: avatarFloat 2.8s ease-in-out infinite;
+}
+
+.aiBubbleAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Bubble Content */
+.aiBubbleContent {
+  display: flex;
+  flex-direction: column;
+  padding-right: 10px;
+}
+
+.aiBubbleTitle {
+  color: #818cf8;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 3px;
+}
+
+.aiBubbleText {
+  color: #e2e8f0;
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* --- Floating Circular Trigger Button (Robot Avatar) --- */
+.aiCircleTriggerBtn {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background-color: #0f172a;
+  border: 2.5px solid #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3), 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(79, 70, 229, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 0;
+  margin-right: 4px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: avatarFloat 3.5s ease-in-out infinite 0.5s;
+}
+
+.aiCircleTriggerBtn:hover {
+  transform: scale(1.08);
+  border-color: #818cf8;
+  box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.5), 0 12px 28px rgba(0, 0, 0, 0.6), 0 0 24px rgba(99, 102, 241, 0.6);
+}
+
+.aiCircleTriggerImg {
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -105,91 +201,144 @@
   display: block;
 }
 
+.aiOnlineBadge {
+  position: absolute;
+  bottom: 1px;
+  right: 1px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: #10b981;
+  border: 2.5px solid #0f172a;
+  box-shadow: 0 0 6px #10b981;
+}
+
+/* --- Chat Window (Interior) --- */
+.aiChatWindow {
+  width: 375px;
+  height: 530px;
+  background-color: #0f172a;
+  border-radius: 16px;
+  border: 1.5px solid rgba(99, 102, 241, 0.35);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(79, 70, 229, 0.18);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- Header --- */
+.aiHeader {
+  background-color: #0f172a;
+  padding: 16px 20px 14px 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+}
+
+.aiHeaderInfo {
+  display: flex;
+  flex-direction: column;
+}
+
 .aiTitle {
   margin: 0;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  line-height: 1.2;
 }
 
-.aiStatus {
-  font-size: 11px;
-  opacity: 0.9;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.aiSubtitle {
+  margin: 4px 0 0 0;
+  font-size: 12.5px;
+  color: #94a3af;
+  font-weight: 400;
+  line-height: 1.3;
 }
 
-.aiStatusDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: #34d399;
-  display: inline-block;
-  box-shadow: 0 0 6px #34d399;
-}
-
-.aiHeaderActions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.aiHeaderBtn {
+.aiHeaderCloseBtn {
   background: transparent;
   border: none;
-  color: #ffffff;
+  color: #94a3af;
   cursor: pointer;
   padding: 4px;
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.aiHeaderBtn:hover {
-  background: rgba(255, 255, 255, 0.2);
+.aiHeaderCloseBtn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* --- Messages Body --- */
+/* --- Messages Container --- */
 .aiMessagesBody {
   flex: 1;
-  padding: 16px;
+  padding: 16px 18px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  background-color: #f8fafc;
+  gap: 16px;
+  background-color: #0f172a;
+}
+
+.aiMessagesBody::-webkit-scrollbar {
+  width: 5px;
+}
+
+.aiMessagesBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.aiMessagesBody::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.25);
+  border-radius: 10px;
+}
+
+.aiMessagesBody::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.5);
 }
 
 .aiMessageRow {
   display: flex;
   align-items: flex-end;
-  gap: 8px;
+  gap: 10px;
   max-width: 88%;
 }
 
 .userRow {
   align-self: flex-end;
-  flex-direction: row-reverse;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 .botRow {
   align-self: flex-start;
 }
 
+/* Bot Avatar (Gently animating up and down) */
 .aiMsgAvatar {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   margin-bottom: 2px;
-  background-color: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  background-color: #1e293b;
+  border: 1.5px solid rgba(99, 102, 241, 0.4);
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+  animation: avatarFloat 2.6s ease-in-out infinite;
 }
 
 .aiMsgAvatarImg {
@@ -200,28 +349,57 @@
   display: block;
 }
 
-.aiBubble {
-  padding: 11px 14px;
-  border-radius: 16px;
-  font-size: 13.5px;
-  line-height: 1.5;
-  word-break: break-word;
+/* User Avatar (Gently animating up and down with staggered delay) */
+.aiUserAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 2px;
+  background: linear-gradient(135deg, #4f46e5, #ec4899);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+  animation: avatarFloat 2.6s ease-in-out infinite 0.4s;
 }
 
-/* Solid User Bubble */
+.aiUserAvatarImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.aiBubble {
+  border-radius: 14px;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* Bot Message Bubble (Dark slate) */
+.botBubble {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  border-bottom-left-radius: 4px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* User Message Bubble (Website Primary Theme: Indigo) */
 .userBubble {
-  background-color: #4f46e5;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
   color: #ffffff;
   border-bottom-right-radius: 4px;
-}
-
-/* Solid Bot Bubble */
-.botBubble {
-  background-color: #ffffff;
-  color: #1e293b;
-  border-bottom-left-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  padding: 9px 15px;
+  font-size: 13.5px;
+  font-weight: 500;
+  box-shadow: 0 3px 12px rgba(79, 70, 229, 0.35);
 }
 
 .aiBubbleText {
@@ -239,6 +417,7 @@
 .aiBubbleTime {
   font-size: 10px;
   opacity: 0.65;
+  color: inherit;
 }
 
 .aiCopyBtn {
@@ -249,23 +428,24 @@
   align-items: center;
   gap: 3px;
   font-size: 10.5px;
-  color: #64748b;
+  color: #94a3af;
   padding: 2px 5px;
   border-radius: 4px;
   transition: all 0.2s ease;
 }
 
 .aiCopyBtn:hover {
-  background-color: #f1f5f9;
-  color: #0f172a;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
 /* --- Typing Indicator --- */
 .typingBubble {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 12px 16px;
+  gap: 5px;
+  padding: 12px 18px;
+  background-color: #1e293b;
 }
 
 .typingDot {
@@ -286,15 +466,15 @@
 
 /* --- Quick Suggestions --- */
 .aiSuggestions {
-  padding: 8px 14px 10px 14px;
-  background-color: #ffffff;
-  border-top: 1px solid #f1f5f9;
+  padding: 8px 18px 10px 18px;
+  background-color: #0f172a;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .aiSuggestionsTitle {
   font-size: 11px;
   font-weight: 600;
-  color: #64748b;
+  color: #818cf8;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -310,54 +490,63 @@
 }
 
 .aiChip {
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 6px 10px;
+  background-color: #1e293b;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 10px;
+  padding: 6px 11px;
   font-size: 11.5px;
-  color: #334155;
+  color: #cbd5e1;
   cursor: pointer;
   text-align: left;
   transition: all 0.2s ease;
 }
 
 .aiChip:hover {
-  background-color: #ede9fe;
-  border-color: #c7d2fe;
-  color: #4f46e5;
+  background-color: #312e81;
+  border-color: #6366f1;
+  color: #ffffff;
 }
 
-/* --- Input Footer (Solid Theme) --- */
+/* --- Input Footer --- */
 .aiInputContainer {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  background-color: #ffffff;
-  border-top: 1px solid #e2e8f0;
+  gap: 10px;
+  padding: 12px 18px 16px 18px;
+  background-color: #0f172a;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .aiInput {
   flex: 1;
-  border: 1px solid #e2e8f0;
-  border-radius: 20px;
-  padding: 8px 14px;
+  height: 42px;
+  background-color: #0b0f19;
+  border: 1.5px solid rgba(99, 102, 241, 0.5);
+  border-radius: 8px;
+  padding: 0 14px;
   font-size: 13px;
+  color: #ffffff;
+  caret-color: #6366f1;
   outline: none;
   font-family: inherit;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.aiInput::placeholder {
+  color: #64748b;
 }
 
 .aiInput:focus {
-  border-color: #4f46e5;
+  border-color: #6366f1;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.35);
 }
 
 .aiSendBtn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
   border: none;
-  background-color: #4f46e5;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
   color: #ffffff;
   cursor: pointer;
   display: flex;
@@ -365,11 +554,13 @@
   justify-content: center;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(79, 70, 229, 0.3);
 }
 
 .aiSendBtn:hover:not(:disabled) {
-  background-color: #4338ca;
-  transform: scale(1.05);
+  background: #4338ca;
+  transform: scale(1.04);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.5);
 }
 
 .aiSendBtn:disabled {
