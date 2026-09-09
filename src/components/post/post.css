@@ -88,6 +88,14 @@
     font-size: 14px;
     color: #4b5563;
     font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    user-select: none;
+}
+
+.postLikeCounter:hover {
+    color: #4f46e5;
+    text-decoration: underline;
 }
 
 .postBottomRight {
@@ -159,3 +167,147 @@
 .postDropdownItem:hover {
     background-color: #f3f4f6;
 }
+
+/* Likes Popup Modal */
+.likesModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    animation: fadeInModal 0.2s ease-out;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.likesModal {
+    background: #ffffff;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    border-radius: 18px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: scaleUpModal 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid #e5e7eb;
+}
+
+@keyframes scaleUpModal {
+    from { transform: scale(0.92); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.likesModalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid #f3f4f6;
+    background: #fafafa;
+}
+
+.likesModalHeaderTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.likesModalCloseBtn {
+    background: transparent;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.likesModalCloseBtn:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.likesModalBody {
+    padding: 10px 14px;
+    overflow-y: auto;
+    max-height: 380px;
+}
+
+.likesModalLoading,
+.likesModalEmpty {
+    padding: 30px 20px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 13.5px;
+}
+
+.likesModalList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.likesModalUserItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.likesModalUserItem:hover {
+    background-color: #f3f4f6;
+    transform: translateX(3px);
+}
+
+.likesModalUserImg {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+.likesModalUserInfo {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.likesModalUsername {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.likesModalDesc {
+    font-size: 12px;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+    margin-top: 1px;
+}
+

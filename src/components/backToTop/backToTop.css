@@ -1,0 +1,146 @@
+/* ===================================================
+   ZAKORA SOCIAL - BACK TO TOP COMPONENT
+   =================================================== */
+
+.backToTopContainer {
+  position: fixed;
+  bottom: 74px;
+  right: 19px;
+  z-index: 9995;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.85);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.backToTopContainer.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.backToTopBtn {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.16), 0 2px 6px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #4f46e5;
+}
+
+.backToTopBtn:hover {
+  transform: translateY(-4px) scale(1.06);
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.3), 0 4px 10px rgba(0, 0, 0, 0.08);
+  border-color: #c7d2fe;
+}
+
+.backToTopBtn:active {
+  transform: translateY(-1px) scale(0.96);
+}
+
+/* SVG Progress Ring */
+.backToTopSvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.backToTopTrack {
+  fill: transparent;
+  stroke: rgba(226, 232, 240, 0.8);
+  transition: stroke 0.2s ease;
+}
+
+.backToTopProgress {
+  fill: transparent;
+  stroke: #6366f1;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.15s ease, stroke 0.25s ease;
+}
+
+.backToTopBtn:hover .backToTopProgress {
+  stroke: #4f46e5;
+}
+
+/* Arrow Icon */
+.backToTopIcon {
+  font-size: 22px !important;
+  color: #4f46e5;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+  z-index: 1;
+}
+
+.backToTopBtn:hover .backToTopIcon {
+  transform: translateY(-2px);
+  color: #4338ca;
+}
+
+/* Hover Tooltip */
+.backToTopTooltip {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  background-color: #0f172a;
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.3px;
+}
+
+.backToTopTooltip::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: transparent transparent transparent #0f172a;
+}
+
+.backToTopBtn:hover .backToTopTooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Responsive (Mobile) */
+@media screen and (max-width: 768px) {
+  .backToTopContainer {
+    bottom: 58px;
+    right: 11px;
+  }
+  
+  .backToTopBtn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .backToTopIcon {
+    font-size: 18px !important;
+  }
+  
+  .backToTopTooltip {
+    display: none;
+  }
+}

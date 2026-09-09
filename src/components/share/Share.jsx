@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from "react";
 import "./share.css";
-import { PermMedia, PlayCircle, Article, Cancel } from "@mui/icons-material";
+import { PermMedia, PlayCircle, Article, Cancel, Visibility, Edit } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import FormattedContent from "../formattedContent/FormattedContent";
@@ -14,6 +14,7 @@ const Share = () => {
     const [isPreview, setIsPreview] = useState(false);
     const [files, setFiles] = useState([]);
     const [isArticle, setIsArticle] = useState(false);
+    const [isSharing, setIsSharing] = useState(false);
 
     const handleFileChange = (e) => {
         setFiles(prev => [...prev, ...Array.from(e.target.files)]);
@@ -54,38 +55,41 @@ const Share = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
+        if (isSharing) return;
 
         const postDesc = isArticle ? articleText : (desc.current?.value || "");
+        if (!postDesc.trim() && files.length === 0) return;
 
-        const newPost = {
-            userId: user._id,
-            desc: postDesc,
-            img: [],
-            video: []
-        };
-
-        if (files.length > 0) {
-            await Promise.all(files.map(async (f) => {
-                const data = new FormData();
-                const filename = Date.now() + "_" + f.name;
-                data.append("name", filename);
-                data.append("file", f);
-                try {
-                    const res = await axios.post("/upload", data);
-                    const cloudUrl = res.data?.url || filename;
-                    
-                    if (f.type.startsWith("image/")) {
-                        newPost.img.push(cloudUrl);
-                    } else if (f.type.startsWith("video/")) {
-                        newPost.video.push(cloudUrl);
-                    }
-                } catch (err) {
-                    console.log(err);
-                }
-            }));
-        }
-
+        setIsSharing(true);
         try {
+            const newPost = {
+                userId: user._id,
+                desc: postDesc,
+                img: [],
+                video: []
+            };
+
+            if (files.length > 0) {
+                await Promise.all(files.map(async (f) => {
+                    const data = new FormData();
+                    const filename = Date.now() + "_" + f.name;
+                    data.append("name", filename);
+                    data.append("file", f);
+                    try {
+                        const res = await axios.post("/upload", data);
+                        const cloudUrl = res.data?.url || filename;
+                        
+                        if (f.type.startsWith("image/")) {
+                            newPost.img.push(cloudUrl);
+                        } else if (f.type.startsWith("video/")) {
+                            newPost.video.push(cloudUrl);
+                        }
+                    } catch (err) {
+                        console.error("Upload error:", err);
+                    }
+                }));
+            }
+
             await axios.post("/posts", newPost);
             if (desc.current) desc.current.value = "";
             setArticleText("");
@@ -94,7 +98,9 @@ const Share = () => {
             setIsArticle(false);
             window.dispatchEvent(new CustomEvent('postCreated'));
         } catch (err) {
-            console.log(err);
+            console.error("Post creation error:", err);
+        } finally {
+            setIsSharing(false);
         }
     };
 
@@ -183,9 +189,19 @@ const Share = () => {
                                     type="button"
                                     className={`formatBtn previewToggleBtn ${isPreview ? 'active' : ''}`}
                                     onClick={() => setIsPreview(!isPreview)}
-                                    title="Toggle Preview"
+                                    title={isPreview ? "Switch to Editor" : "Preview Article"}
                                 >
-                                    {isPreview ? "✏️ Edit" : "👁️ Preview"}
+                                    {isPreview ? (
+                                        <>
+                                            <Edit className="previewBtnIcon" />
+                                            <span>Edit</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Visibility className="previewBtnIcon" />
+                                            <span>Preview</span>
+                                        </>
+                                    )}
                                 </button>
                             </div>
 
@@ -258,7 +274,20 @@ const Share = () => {
                             <span className="shareOptionText">Article {isArticle ? "✓" : ""}</span>
                         </div>
                     </div>
-                    <button className="shareButton" type="submit">Share</button>
+                    <button 
+                        className={`shareButton ${isSharing ? "shareButtonLoading" : ""}`} 
+                        type="submit"
+                        disabled={isSharing}
+                    >
+                        {isSharing ? (
+                            <span className="shareButtonContent">
+                                <span className="shareSpinner" />
+                                <span>Sharing...</span>
+                            </span>
+                        ) : (
+                            "Share"
+                        )}
+                    </button>
                 </form>
             </div>
         </div>

@@ -23,6 +23,20 @@
     overflow: hidden;
 }
 
+body.dark-theme .profileRightTop {
+    background: #1e293b !important;
+    border-bottom: 1px solid #334155 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-theme .profileInfoName {
+    color: #f8fafc !important;
+}
+
+body.dark-theme .profileInfoDesc {
+    color: #94a3b8 !important;
+}
+
 .profileCover {
     height: 320px;
     position: relative;
@@ -134,7 +148,17 @@
         width: 100%;
     }
     .profileRightBottom {
+        display: flex;
         flex-direction: column;
+    }
+    .profileRightBottom .rightbar {
+        order: 1 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .profileRightBottom .feed {
+        order: 2 !important;
+        width: 100% !important;
     }
     .profileCover {
         height: 250px;

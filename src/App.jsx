@@ -6,6 +6,7 @@ import Register from './pages/register/Register';
 import SinglePost from './pages/singlePost/SinglePost';
 import NotFound from './pages/notFound/NotFound';
 import AiAgent from './components/aiAgent/AiAgent';
+import BackToTop from './components/backToTop/BackToTop';
 import { useContext } from 'react';
 import { AuthContext } from './context/AuthContext';
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/post/:postId" element={<SinglePost />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <BackToTop />
       <AiAgent />
     </BrowserRouter>
   );

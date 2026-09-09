@@ -1,0 +1,1004 @@
+/* ===================================================
+   ZAKORA SOCIAL - DYNAMIC THEME SYSTEM (LIGHT / DARK)
+   =================================================== */
+
+/* Smooth global theme transitions */
+body, 
+.topbarContainer, 
+.homeContainer, 
+.post, 
+.share, 
+.sidebar, 
+.rightbar, 
+.profile,
+.profileRightTop,
+.aiChatWindow, 
+.aiSpeechBubble,
+.aiCircleTriggerBtn,
+.notificationsDropdown,
+.likesModal {
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Base Light Theme */
+body.light-theme {
+    background-color: #f9fafb;
+    color: #111827;
+}
+
+/* Base Dark Theme */
+body.dark-theme {
+    background-color: #0b0f19 !important;
+    color: #f8fafc !important;
+}
+
+/* ===================================================
+   TOPBAR & NAVIGATION (DARK THEME)
+   =================================================== */
+.dark-theme .topbarContainer {
+    background-color: #0f172a !important;
+    border-bottom: 1px solid #1e293b !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark-theme .searchBar {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+}
+
+.dark-theme .searchBar:focus-within {
+    background-color: #1e293b !important;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4) !important;
+    border-color: #6366f1 !important;
+}
+
+.dark-theme .searchInput {
+    color: #f8fafc !important;
+}
+
+.dark-theme .searchInput::placeholder {
+    color: #64748b !important;
+}
+
+.dark-theme .searchIcon {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .topbarLinks,
+.dark-theme .topbarIcons {
+    color: #cbd5e1 !important;
+}
+
+.dark-theme .topbarLink {
+    color: #cbd5e1 !important;
+}
+
+.dark-theme .topbarLink:hover {
+    color: #818cf8 !important;
+}
+
+.dark-theme .topbarIconItem {
+    color: #f8fafc !important;
+}
+
+.dark-theme .topbarIconItem:hover {
+    color: #818cf8 !important;
+}
+
+.dark-theme .topbarIconBadge {
+    border-color: #0f172a !important;
+}
+
+.dark-theme .topbarImg {
+    border-color: #334155 !important;
+}
+
+/* Mobile Hamburger & Icons Visibility in Dark Mode */
+.dark-theme .mobileHamburgerIcon {
+    color: #f8fafc !important;
+}
+
+.dark-theme .mobileLeft {
+    color: #f8fafc !important;
+}
+
+.dark-theme .mobileRight {
+    color: #f8fafc !important;
+}
+
+.dark-theme .mobileAvatarImg {
+    border-color: #334155 !important;
+}
+
+/* Theme Toggle Button */
+.themeToggleBtn {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #475569;
+    outline: none;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.themeToggleBtn:hover {
+    background: #e2e8f0;
+    color: #4f46e5;
+    transform: scale(1.08) rotate(15deg);
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15);
+}
+
+.dark-theme .themeToggleBtn {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #facc15 !important; /* Radiant golden sun */
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.2) !important;
+}
+
+.dark-theme .themeToggleBtn:hover {
+    background: #334155 !important;
+    color: #fef08a !important;
+    transform: scale(1.08) rotate(-15deg);
+    box-shadow: 0 0 18px rgba(250, 204, 21, 0.35) !important;
+}
+
+.themeToggleIcon {
+    font-size: 20px !important;
+    transition: transform 0.3s ease;
+}
+
+/* ===================================================
+   MAIN LAYOUT & HOME CONTAINER
+   =================================================== */
+.dark-theme .homeContainer {
+    background-color: #0b0f19 !important;
+}
+
+/* ===================================================
+   POSTS & FEED (DARK THEME)
+   =================================================== */
+.dark-theme .post {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
+}
+
+.dark-theme .postUsername {
+    color: #f8fafc !important;
+}
+
+.dark-theme .postDate {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .postText {
+    color: #e2e8f0 !important;
+}
+
+.dark-theme .postTopRight svg {
+    color: #cbd5e1 !important;
+}
+
+.dark-theme .postTopRight svg:hover {
+    color: #f8fafc !important;
+}
+
+.dark-theme .postLikeCounter {
+    color: #cbd5e1 !important;
+}
+
+.dark-theme .postLikeCounter:hover {
+    color: #818cf8 !important;
+}
+
+.dark-theme .postCommentText {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .postCommentText:hover {
+    color: #818cf8 !important;
+}
+
+.dark-theme .postBottomRight svg {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .postDropdown {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark-theme .postDropdownItem:hover {
+    background-color: #334155 !important;
+}
+
+/* ===================================================
+   SHARE BOX (DARK THEME)
+   =================================================== */
+.dark-theme .share {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
+}
+
+.dark-theme .shareInput {
+    color: #f8fafc !important;
+    background-color: transparent !important;
+}
+
+.dark-theme .shareInput::placeholder {
+    color: #64748b !important;
+}
+
+.dark-theme .shareHr {
+    border-top: 1px solid #334155 !important;
+}
+
+.dark-theme .shareOptionText {
+    color: #cbd5e1 !important;
+}
+
+.dark-theme .shareOption:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.dark-theme .shareArticleTextarea {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+}
+
+.dark-theme .shareArticleTextarea::placeholder {
+    color: #64748b !important;
+}
+
+.dark-theme .shareFormatToolbar {
+    background-color: #0f172a !important;
+    border: 1px solid #334155 !important;
+}
+
+.dark-theme .formatBtn {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+    border: 1px solid #334155 !important;
+}
+
+.dark-theme .formatBtn:hover {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+    border-color: #6366f1 !important;
+}
+
+.dark-theme .formatSeparator {
+    color: #475569 !important;
+}
+
+.dark-theme .previewToggleBtn {
+    background-color: #1e293b !important;
+    color: #cbd5e1 !important;
+    border: 1px solid #334155 !important;
+}
+
+.dark-theme .previewToggleBtn:hover {
+    background-color: #334155 !important;
+    color: #ffffff !important;
+    border-color: #6366f1 !important;
+}
+
+.dark-theme .previewToggleBtn.active {
+    background-color: #4f46e5 !important;
+    color: #ffffff !important;
+    border-color: #4f46e5 !important;
+}
+
+.dark-theme .previewToggleBtn.active:hover {
+    background-color: #4338ca !important;
+    color: #ffffff !important;
+}
+
+.dark-theme .articlePreviewContainer {
+    background-color: #0f172a !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+}
+
+.dark-theme .articlePreviewHeader {
+    color: #94a3b8 !important;
+    border-bottom: 1px dashed #334155 !important;
+}
+
+.dark-theme .shareOptionActive {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Feed Guest Welcome Banner (Dark Theme) */
+.dark-theme .feedGuestBanner {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
+}
+
+.dark-theme .feedGuestTitle {
+    color: #f8fafc !important;
+}
+
+.dark-theme .feedGuestDesc {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .feedGuestRegisterBtn {
+    background-color: rgba(99, 102, 241, 0.15) !important;
+    border: 1px solid rgba(99, 102, 241, 0.35) !important;
+    color: #a5b4fc !important;
+}
+
+.dark-theme .feedGuestRegisterBtn:hover {
+    background-color: rgba(99, 102, 241, 0.25) !important;
+    color: #c7d2fe !important;
+    border-color: #818cf8 !important;
+}
+
+/* ===================================================
+   SIDEBAR (DARK THEME)
+   =================================================== */
+.dark-theme .sidebar {
+    background-color: transparent !important;
+}
+
+.dark-theme .sidebarListItem:hover {
+    background-color: #1e293b !important;
+}
+
+.dark-theme .sidebarIcon {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .sidebarListItemText {
+    color: #e2e8f0 !important;
+}
+
+.dark-theme .sidebarHr {
+    border-top: 1px solid #334155 !important;
+}
+
+.dark-theme .sidebarFriendName {
+    color: #f8fafc !important;
+}
+
+.dark-theme .sidebarSearchContainer {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+}
+
+.dark-theme .sidebarSearchContainer:focus-within {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3) !important;
+}
+
+.dark-theme .sidebarSearchInput {
+    color: #f8fafc !important;
+}
+
+.dark-theme .sidebarSearchInput::placeholder {
+    color: #64748b !important;
+}
+
+/* ===================================================
+   RIGHTBAR (DARK THEME)
+   =================================================== */
+.dark-theme .birthdayContainer {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+}
+
+.dark-theme .birthdayText {
+    color: #cbd5e1 !important;
+}
+
+.dark-theme .rightbarTitle {
+    color: #f8fafc !important;
+}
+
+.dark-theme .rightbarFriendName {
+    color: #f8fafc !important;
+}
+
+.dark-theme .rightbarUsername {
+    color: #f8fafc !important;
+}
+
+.dark-theme .rightbarOnline {
+    border-color: #1e293b !important;
+}
+
+.dark-theme .rightbarInfo,
+.dark-theme .rightbarFollowings {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+}
+
+.dark-theme .rightbarFollowingName {
+    color: #e2e8f0 !important;
+}
+
+.dark-theme .rightbarInfoItem {
+    color: #e2e8f0 !important;
+}
+
+.dark-theme .rightbarInfoKey {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .rightbarInfoValue {
+    color: #f8fafc !important;
+}
+
+.dark-theme .rightbarDivider {
+    border-top: 1px solid #334155 !important;
+}
+
+.dark-theme .rightbarGuestCard {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+}
+
+.dark-theme .rightbarGuestTitle {
+    color: #f8fafc !important;
+}
+
+.dark-theme .rightbarGuestDesc {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .rightbarGuestRegisterBtn {
+    background-color: rgba(99, 102, 241, 0.15) !important;
+    border: 1px solid rgba(99, 102, 241, 0.35) !important;
+    color: #a5b4fc !important;
+}
+
+.dark-theme .rightbarGuestRegisterBtn:hover {
+    background-color: rgba(99, 102, 241, 0.25) !important;
+    color: #c7d2fe !important;
+    border-color: #818cf8 !important;
+}
+
+.dark-theme .rightbarEmptyText {
+    color: #64748b !important;
+}
+
+.dark-theme .rightbarInfo input,
+.dark-theme .rightbarInfo select {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+}
+
+/* ===================================================
+   PROFILE PAGE (DARK THEME)
+   =================================================== */
+.dark-theme .profile {
+    background-color: #0b0f19 !important;
+}
+
+.dark-theme .profileRightTop {
+    background: #1e293b !important;
+    border-bottom: 1px solid #334155 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-theme .profileUserImg {
+    border-color: #1e293b !important;
+}
+
+.dark-theme .editCoverBtn {
+    background-color: #334155 !important;
+    color: #f8fafc !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid #475569 !important;
+}
+
+.dark-theme .editCoverBtn:hover {
+    background-color: #475569 !important;
+}
+
+.dark-theme .editProfileBtn {
+    background-color: #334155 !important;
+    border-color: #1e293b !important;
+    color: #f8fafc !important;
+}
+
+.dark-theme .editProfileBtn:hover {
+    background-color: #475569 !important;
+}
+
+.dark-theme .profileInfoName {
+    color: #f8fafc !important;
+}
+
+.dark-theme .profileInfoDesc {
+    color: #94a3b8 !important;
+}
+
+/* ===================================================
+   COMMENTS & REPLIES (DARK THEME)
+   =================================================== */
+.dark-theme .commentsSection {
+    border-top: 1px solid #334155 !important;
+}
+
+.dark-theme .commentInputBox {
+    background-color: #0f172a !important;
+    border: 1px solid #334155 !important;
+}
+
+.dark-theme .commentInputBox:focus-within {
+    background-color: #0f172a !important;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25) !important;
+}
+
+.dark-theme .commentInputField {
+    color: #f8fafc !important;
+}
+
+.dark-theme .commentContentBox {
+    background-color: #0f172a !important;
+    border: 1px solid #334155 !important;
+}
+
+.dark-theme .commentAuthor {
+    color: #f8fafc !important;
+}
+
+.dark-theme .commentText {
+    color: #e2e8f0 !important;
+}
+
+.dark-theme .commentDate {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .commentActionBtn {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .commentActionBtn:hover {
+    color: #818cf8 !important;
+    background-color: #1e293b !important;
+}
+
+.dark-theme .commentActionsBar {
+    border-top: 1px solid #334155 !important;
+}
+
+.dark-theme .inlineReplyField {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+}
+
+.dark-theme .inlineReplyField::placeholder {
+    color: #64748b !important;
+}
+
+/* ===================================================
+   FORMATTED CONTENT (HEADINGS, QUOTES, CODE)
+   =================================================== */
+.dark-theme .fcHeading1 {
+    color: #f8fafc !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+.dark-theme .fcHeading2 {
+    color: #f8fafc !important;
+}
+
+.dark-theme .fcQuote {
+    background-color: #0f172a !important;
+    color: #cbd5e1 !important;
+    border-left-color: #6366f1 !important;
+}
+
+.dark-theme .fcInlineCode {
+    background-color: #0f172a !important;
+    border: 1px solid #334155 !important;
+    color: #f43f5e !important;
+}
+
+/* ===================================================
+   LIKES POPUP MODAL (DARK THEME)
+   =================================================== */
+.dark-theme .likesModal {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7) !important;
+}
+
+.dark-theme .likesModalHeader {
+    background-color: #0f172a !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+.dark-theme .likesModalHeaderTitle {
+    color: #f8fafc !important;
+}
+
+.dark-theme .likesModalCloseBtn {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .likesModalCloseBtn:hover {
+    background-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+.dark-theme .likesModalUserItem:hover {
+    background-color: #334155 !important;
+}
+
+.dark-theme .likesModalUsername {
+    color: #f8fafc !important;
+}
+
+.dark-theme .likesModalDesc {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .likesModalEmpty,
+.dark-theme .likesModalLoading {
+    color: #94a3b8 !important;
+}
+
+/* ===================================================
+   NOTIFICATIONS & MOBILE MENU (DARK THEME)
+   =================================================== */
+.dark-theme .notificationsDropdown {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6) !important;
+}
+
+.dark-theme .notificationsDropdownHeader {
+    border-bottom: 1px solid #334155 !important;
+}
+
+.dark-theme .notifHeaderTitle {
+    color: #f8fafc !important;
+}
+
+.dark-theme .notifItem.read {
+    background-color: #1e293b !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+.dark-theme .notifItem.unread {
+    background-color: rgba(99, 102, 241, 0.18) !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+.dark-theme .notifItem:hover {
+    background-color: #334155 !important;
+}
+
+.dark-theme .notifSenderName {
+    color: #f8fafc !important;
+}
+
+.dark-theme .notifActionText {
+    color: #cbd5e1 !important;
+}
+
+/* Profile Dropdown Menu (Dark Theme) */
+.dark-theme .profileDropdownMenu {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6) !important;
+}
+
+.dark-theme .profileDropdownUserHeader {
+    border-bottom: 1px solid #334155 !important;
+}
+
+.dark-theme .profileDropdownName {
+    color: #f8fafc !important;
+}
+
+.dark-theme .profileDropdownEmail {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .profileDropdownItem {
+    color: #cbd5e1 !important;
+}
+
+.dark-theme .profileDropdownItem:hover {
+    background-color: #334155 !important;
+    color: #818cf8 !important;
+}
+
+.dark-theme .profileDropdownItem svg {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .profileDropdownItem:hover svg {
+    color: #818cf8 !important;
+}
+
+.dark-theme .profileDropdownLogout {
+    border-top: 1px solid #334155 !important;
+    color: #f87171 !important;
+}
+
+.dark-theme .profileDropdownLogout:hover {
+    background-color: rgba(239, 68, 68, 0.15) !important;
+    color: #fca5a5 !important;
+}
+
+.dark-theme .profileDropdownLogout svg {
+    color: #f87171 !important;
+}
+
+.dark-theme .mobileMenuOverlay {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+.dark-theme .mobileMenuHeader {
+    border-bottom: 1px solid #1e293b !important;
+}
+
+.dark-theme .mobileThemeToggleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    margin: 10px 20px;
+    background-color: #1e293b;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: #f8fafc;
+}
+
+/* ===================================================
+   SWEETALERT2 MODAL POPUPS (DARK THEME)
+   =================================================== */
+.dark-theme .swal2-popup {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7) !important;
+}
+
+.dark-theme .swal2-title,
+.dark-theme .swal2-html-container {
+    color: #f8fafc !important;
+}
+
+/* ===================================================
+   LOGIN & REGISTER PAGES (DARK THEME)
+   =================================================== */
+.dark-theme .login,
+.dark-theme .register {
+    background-color: #0b0f19 !important;
+}
+
+.dark-theme .loginCard,
+.dark-theme .registerCard {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark-theme .inputLabel {
+    color: #f8fafc !important;
+}
+
+.dark-theme .loginInput {
+    background: #0f172a !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+}
+
+.dark-theme .rememberMe {
+    color: #cbd5e1 !important;
+}
+
+.dark-theme .loginDesc,
+.dark-theme .loginFooter {
+    color: #94a3b8 !important;
+}
+
+/* ===================================================
+   404 NOT FOUND PAGE (DARK THEME)
+   =================================================== */
+.dark-theme .notFoundContainer {
+    background: linear-gradient(135deg, #0b0f19 0%, #0f172a 50%, #1e1b4b 100%) !important;
+}
+
+.dark-theme .notFoundCard {
+    background: rgba(30, 41, 59, 0.88) !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6) !important;
+}
+
+.dark-theme .notFoundTitle {
+    color: #f8fafc !important;
+}
+
+.dark-theme .notFoundDesc {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .notFoundCenterOrb {
+    background: linear-gradient(135deg, #1e293b, #312e81) !important;
+    border-color: #475569 !important;
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4) !important;
+}
+
+.dark-theme .notFoundOrbIcon {
+    color: #818cf8 !important;
+}
+
+.dark-theme .notFoundOrbRing {
+    border-color: rgba(129, 140, 248, 0.4) !important;
+}
+
+.dark-theme .notFoundSecondaryBtn {
+    background: #1e293b !important;
+    color: #e2e8f0 !important;
+    border-color: #475569 !important;
+}
+
+.dark-theme .notFoundSecondaryBtn:hover {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border-color: #64748b !important;
+}
+
+.dark-theme .notFoundQuickLinks {
+    border-top-color: #334155 !important;
+}
+
+.dark-theme .notFoundQuickLabel {
+    color: #64748b !important;
+}
+
+.dark-theme .notFoundChip {
+    background: #0f172a !important;
+    color: #cbd5e1 !important;
+    border: 1px solid #334155 !important;
+}
+
+.dark-theme .notFoundChip:hover {
+    background: #1e293b !important;
+    color: #818cf8 !important;
+    border-color: #6366f1 !important;
+}
+
+/* ===================================================
+   BACK TO TOP (DARK THEME)
+   =================================================== */
+.dark-theme .backToTopBtn {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 14px rgba(99, 102, 241, 0.25) !important;
+}
+
+.dark-theme .backToTopBtn:hover {
+  background-color: #334155 !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(99, 102, 241, 0.45) !important;
+}
+
+.dark-theme .backToTopTrack {
+  stroke: rgba(51, 65, 85, 0.8) !important;
+}
+
+.dark-theme .backToTopProgress {
+  stroke: #818cf8 !important;
+}
+
+.dark-theme .backToTopIcon {
+  color: #f8fafc !important;
+}
+
+.dark-theme .backToTopBtn:hover .backToTopIcon {
+  color: #a5b4fc !important;
+}
+
+.dark-theme .backToTopTooltip {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border: 1px solid #334155 !important;
+}
+
+.dark-theme .backToTopTooltip::after {
+  border-color: transparent transparent transparent #1e293b !important;
+}
+
+/* ===================================================
+   RIGHTBAR & PROFILE DETAILS (DARK THEME)
+   =================================================== */
+.dark-theme .rightbarTitle {
+    color: #f8fafc !important;
+}
+
+.dark-theme .rightbarInfo {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-theme .rightbarInfoKey {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .rightbarInfoValue {
+    color: #f8fafc !important;
+}
+
+.dark-theme .rightbarFollowings {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-theme .rightbarFollowingName {
+    color: #cbd5e1 !important;
+}
+
+.dark-theme .birthdayContainer {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-theme .birthdayText {
+    color: #cbd5e1 !important;
+}
+
+.dark-theme .rightbarDivider {
+    border-top: 1px solid #334155 !important;
+}
+
+.dark-theme .rightbarGuestCard {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark-theme .rightbarGuestTitle {
+    color: #f8fafc !important;
+}
+
+.dark-theme .rightbarGuestDesc {
+    color: #94a3b8 !important;
+}
+
+.dark-theme .rightbarGuestRegisterBtn {
+    background-color: #0f172a !important;
+    color: #818cf8 !important;
+    border-color: #3730a3 !important;
+}
+
+.dark-theme .rightbarGuestRegisterBtn:hover {
+    background-color: #1e1b4b !important;
+}
+
+

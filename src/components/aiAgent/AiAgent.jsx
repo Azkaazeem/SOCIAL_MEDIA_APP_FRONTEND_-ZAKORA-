@@ -9,6 +9,7 @@ import {
 } from "@mui/icons-material";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import "./aiAgent.css";
 
 const AI_PIC = "/assets/AI.jpg";
@@ -31,6 +32,7 @@ const SUGGESTIONS = [
 
 const AiAgent = () => {
   const { user } = useContext(AuthContext);
+  const { darkMode } = useContext(ThemeContext);
   const PF = import.meta.env.VITE_PUBLIC_FOLDER || "/assets/";
   const resolvePath = (path) => path ? (path.startsWith("http") ? path : (PF.endsWith("/") ? PF : PF + "/") + (path.startsWith("/") ? path.slice(1) : path)) : "";
   const userAvatarUrl = user?.profilePicture ? resolvePath(user.profilePicture) : null;
@@ -129,7 +131,7 @@ const AiAgent = () => {
   };
 
   return (
-    <div className="aiAgentWrapper">
+    <div className={`aiAgentWrapper ${darkMode ? "aiDark" : "aiLight"}`} data-theme={darkMode ? "dark" : "light"}>
       {/* Floating Action Trigger & Speech Bubble */}
       {!isOpen && (
         <div className="aiFloatingContainer">

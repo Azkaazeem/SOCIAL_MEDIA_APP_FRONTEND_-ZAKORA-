@@ -9,10 +9,27 @@
     .rightbar {
         display: none;
     }
-    /* Add a specific override for profile page on mobile so it doesn't disappear completely */
+    /* Add a specific override for profile page on mobile so it displays smoothly at the top */
     .profileRightBottom .rightbar {
         display: block;
         padding: 0 16px;
+    }
+    .profileRightBottom .rightbarWrapper {
+        padding: 10px 0 0 0;
+    }
+    .profileRightBottom .rightbarInfo {
+        margin-bottom: 16px;
+        padding: 16px;
+    }
+    .profileRightBottom .rightbarFollowings {
+        padding: 14px;
+        gap: 12px;
+        max-height: 280px;
+        overflow-y: auto;
+    }
+    .profileRightBottom .rightbarFollowingImg {
+        width: 70px;
+        height: 70px;
     }
 }
 
@@ -169,4 +186,81 @@
 
 .rightbarFollowButton:focus {
     outline: none;
+}
+
+.rightbarDivider {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #e5e7eb;
+}
+
+.rightbarGuestCard {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    text-align: center;
+}
+
+.rightbarGuestTitle {
+    margin: 0 0 8px 0;
+    color: #111827;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.rightbarGuestDesc {
+    margin: 0 0 16px 0;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.rightbarEmptyText {
+    color: #9ca3af;
+    font-size: 13.5px;
+    display: block;
+    width: 100%;
+}
+
+.rightbarGuestLoginBtn {
+    display: block;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13.5px;
+    text-align: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+}
+
+.rightbarGuestLoginBtn:hover {
+    background: linear-gradient(135deg, #4338ca, #4f46e5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+
+.rightbarGuestRegisterBtn {
+    display: block;
+    background-color: #f8fafc;
+    color: #4f46e5;
+    border: 1px solid #c7d2fe;
+    text-decoration: none;
+    padding: 9px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13.5px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.rightbarGuestRegisterBtn:hover {
+    background-color: #eef2ff;
+    border-color: #a5b4fc;
+    transform: translateY(-1px);
 }

@@ -1,72 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
 .notFoundContainer {
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
-  padding: 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #fdf2f8 100%);
+  padding: 40px 20px;
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Ambient Decorative Glows */
+.notFoundGlow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+}
+
+.notFoundGlow1 {
+  width: 420px;
+  height: 420px;
+  top: -80px;
+  left: -80px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, transparent 70%);
+  animation: pulseGlow 6s ease-in-out infinite alternate;
+}
+
+.notFoundGlow2 {
+  width: 380px;
+  height: 380px;
+  bottom: -60px;
+  right: -60px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.16) 0%, transparent 70%);
+  animation: pulseGlow 7s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(1) translate(0, 0); opacity: 0.6; }
+  100% { transform: scale(1.15) translate(20px, 15px); opacity: 0.9; }
+}
+
+/* Card */
 .notFoundCard {
-  background-color: #ffffff;
-  max-width: 520px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  max-width: 580px;
   width: 100%;
-  padding: 50px 35px;
-  border-radius: 24px;
-  box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.12), 0 0 1px rgba(0, 0, 0, 0.1);
+  padding: 50px 42px;
+  border-radius: 28px;
+  box-shadow: 0 25px 60px -15px rgba(99, 102, 241, 0.12), 0 0 0 1px rgba(226, 232, 240, 0.9);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: fadeIn 0.4s ease;
+  position: relative;
+  z-index: 1;
+  animation: notFoundSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes fadeIn {
+@keyframes notFoundSlideUp {
   from {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(24px) scale(0.97);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
-.notFoundIconWrapper {
-  width: 90px;
-  height: 90px;
+/* Status Badge */
+.notFoundBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: #4f46e5;
+  margin-bottom: 24px;
+}
+
+.notFoundPulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ec4899;
+  box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7);
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(236, 72, 153, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0);
+  }
+}
+
+/* 404 Hero Visual */
+.notFoundHero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 22px;
+  user-select: none;
+}
+
+.notFoundDigit {
+  font-size: 96px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -3px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 8px 18px rgba(99, 102, 241, 0.25));
+}
+
+.notFoundCenterOrb {
+  position: relative;
+  width: 86px;
+  height: 86px;
   border-radius: 50%;
   background: linear-gradient(135deg, #ede9fe, #fce7f3);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  animation: floatOrb 3.5s ease-in-out infinite alternate;
+  box-shadow: 0 12px 28px rgba(99, 102, 241, 0.25);
+  border: 3px solid #ffffff;
 }
 
-.notFoundIcon {
-  font-size: 48px !important;
-  color: #4f46e5;
+@keyframes floatOrb {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-8px) rotate(4deg);
+  }
 }
 
-.notFoundBadge {
-  display: inline-block;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: #ec4899;
-  background: #fdf2f8;
-  padding: 6px 14px;
-  border-radius: 20px;
-  margin-bottom: 12px;
+.notFoundOrbIcon {
+  font-size: 46px !important;
+  color: #6366f1;
 }
 
+.notFoundOrbRing {
+  position: absolute;
+  inset: -6px;
+  border: 2px dashed rgba(99, 102, 241, 0.4);
+  border-radius: 50%;
+  animation: spinRing 16s linear infinite;
+}
+
+@keyframes spinRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Typography */
 .notFoundTitle {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 800;
-  color: #111827;
+  color: #0f172a;
   margin: 0 0 12px 0;
   letter-spacing: -0.5px;
 }
@@ -74,19 +189,22 @@
 .notFoundDesc {
   font-size: 15px;
   line-height: 1.6;
-  color: #6b7280;
+  color: #64748b;
   margin: 0 0 32px 0;
-  max-width: 400px;
+  max-width: 440px;
 }
 
+/* Actions */
 .notFoundActions {
   display: flex;
-  gap: 15px;
+  gap: 14px;
   justify-content: center;
   width: 100%;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
 }
 
-.notFoundHomeBtn {
+.notFoundPrimaryBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -95,24 +213,121 @@
   color: #ffffff;
   text-decoration: none;
   font-weight: 600;
-  font-size: 15px;
-  padding: 12px 28px;
+  font-size: 14.5px;
+  padding: 12px 26px;
   border-radius: 12px;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
   box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  border: none;
+  cursor: pointer;
 }
 
-.notFoundHomeBtn:hover {
+.notFoundPrimaryBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+  box-shadow: 0 8px 22px rgba(79, 70, 229, 0.45);
   background: linear-gradient(135deg, #4338ca, #4f46e5);
 }
 
-@media screen and (max-width: 480px) {
+.notFoundSecondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  font-weight: 600;
+  font-size: 14.5px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.notFoundSecondaryBtn:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #94a3b8;
+  transform: translateY(-2px);
+}
+
+/* Quick Shortcuts */
+.notFoundQuickLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding-top: 24px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.notFoundQuickLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.notFoundChips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.notFoundChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #f1f5f9;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.notFoundChip:hover {
+  background: #e0e7ff;
+  color: #4338ca;
+  border-color: #c7d2fe;
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media screen and (max-width: 580px) {
   .notFoundCard {
-    padding: 35px 20px;
+    padding: 36px 20px;
+    border-radius: 20px;
+  }
+  .notFoundDigit {
+    font-size: 72px;
+  }
+  .notFoundCenterOrb {
+    width: 68px;
+    height: 68px;
+  }
+  .notFoundOrbIcon {
+    font-size: 34px !important;
   }
   .notFoundTitle {
-    font-size: 26px;
+    font-size: 23px;
+  }
+  .notFoundDesc {
+    font-size: 14px;
+  }
+  .notFoundActions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .notFoundPrimaryBtn,
+  .notFoundSecondaryBtn {
+    width: 100%;
   }
 }

@@ -103,6 +103,38 @@
     transform: translateY(-1px);
 }
 
+.shareButton:disabled,
+.shareButtonLoading {
+    cursor: not-allowed !important;
+    opacity: 0.65 !important;
+    pointer-events: none;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.shareButtonContent {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.shareSpinner {
+    width: 13px;
+    height: 13px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: shareSpin 0.75s linear infinite;
+    display: inline-block;
+}
+
+@keyframes shareSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .shareImgContainer {
     padding: 0 0 16px 0;
     position: relative;
@@ -174,7 +206,7 @@
     background-color: #ffffff;
     border: 1px solid #d1d5db;
     border-radius: 6px;
-    padding: 4px 10px;
+    padding: 5px 10px;
     font-size: 13px;
     font-weight: 500;
     color: #374151;
@@ -182,8 +214,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 5px;
     transition: all 0.15s ease;
     font-family: inherit;
+    line-height: 1;
 }
 
 .formatBtn:hover {
@@ -204,12 +238,29 @@
     font-weight: 600;
     font-size: 12px;
     background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+}
+
+.previewToggleBtn:hover {
+    background-color: #e2e8f0;
+    color: #1e293b;
+    border-color: #94a3b8;
 }
 
 .previewToggleBtn.active {
     background-color: #4f46e5;
     color: #ffffff;
     border-color: #4f46e5;
+}
+
+.previewToggleBtn.active:hover {
+    background-color: #4338ca;
+    color: #ffffff;
+}
+
+.previewBtnIcon {
+    font-size: 16px !important;
 }
 
 .shareArticleTextarea {

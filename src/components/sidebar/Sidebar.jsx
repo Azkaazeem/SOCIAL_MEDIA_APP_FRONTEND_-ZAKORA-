@@ -67,13 +67,13 @@ const Sidebar = () => {
 
         <hr className="sidebarHr"/>
 
-        <div style={{ marginBottom: "15px", display: "flex", alignItems: "center", backgroundColor: "#f3f4f6", borderRadius: "8px", padding: "5px 10px" }}>
+        <div className="sidebarSearchContainer">
           <input 
             type="text" 
             placeholder="Search users..." 
             value={userSearch}
             onChange={(e) => setUserSearch(e.target.value)}
-            style={{ border: "none", backgroundColor: "transparent", outline: "none", width: "100%", fontSize: "14px" }}
+            className="sidebarSearchInput"
           />
         </div>
 

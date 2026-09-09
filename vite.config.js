@@ -1,8 +1,18 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
+import os from 'os'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // https://vite.dev/config/
 export default defineConfig({
+  root: __dirname,
+  resolve: {
+    preserveSymlinks: true,
+  },
+  cacheDir: path.join(os.tmpdir(), 'zakora_vite_cache'),
   plugins: [react()],
   server: {
     host: true,

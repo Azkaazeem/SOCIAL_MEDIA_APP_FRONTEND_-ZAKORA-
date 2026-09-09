@@ -1,8 +1,9 @@
 import "./Topbar.css";
-import { Search, Person, Chat, Notifications, Menu, Close, Logout, Login as LoginIcon } from "@mui/icons-material";
+import { Search, Person, Chat, Notifications, Menu, Close, Logout, Login as LoginIcon, LightMode, DarkMode } from "@mui/icons-material";
 import { useContext, useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import Sidebar from "../sidebar/Sidebar";
 import Swal from 'sweetalert2';
 import { SocketContext } from "../../context/SocketContext";
@@ -10,6 +11,7 @@ import { format } from "timeago.js";
 
 const Topbar = () => {
   const { user, dispatch } = useContext(AuthContext);
+  const { darkMode, toggleTheme } = useContext(ThemeContext);
   const { 
     notifications, 
     markAsRead, 
@@ -22,18 +24,29 @@ const Topbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openNotifications, setOpenNotifications] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
   const notificationRef = useRef(null);
+  const mobileNotificationRef = useRef(null);
+  const profileMenuRef = useRef(null);
+  const mobileProfileMenuRef = useRef(null);
 
-  // Close notifications dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+      const clickedInsideDesktopNotif = notificationRef.current && notificationRef.current.contains(event.target);
+      const clickedInsideMobileNotif = mobileNotificationRef.current && mobileNotificationRef.current.contains(event.target);
+      if (!clickedInsideDesktopNotif && !clickedInsideMobileNotif) {
         setOpenNotifications(false);
+      }
+      const clickedInsideDesktopProfile = profileMenuRef.current && profileMenuRef.current.contains(event.target);
+      const clickedInsideMobileProfile = mobileProfileMenuRef.current && mobileProfileMenuRef.current.contains(event.target);
+      if (!clickedInsideDesktopProfile && !clickedInsideMobileProfile) {
+        setProfileMenuOpen(false);
       }
     };
 
-    if (openNotifications) {
+    if (openNotifications || profileMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("touchstart", handleClickOutside);
     }
@@ -42,7 +55,7 @@ const Topbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, [openNotifications]);
+  }, [openNotifications, profileMenuOpen]);
 
   const resolvePath = (path) => path ? (path.startsWith("http") ? path : (PF.endsWith("/") ? PF : PF + "/") + (path.startsWith("/") ? path.slice(1) : path)) : "";
   const profileImage = user?.profilePicture ? resolvePath(user.profilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg";
@@ -128,6 +141,157 @@ const Topbar = () => {
 
   const unreadCount = (notifications || []).filter(n => !n.isRead).length;
 
+  const renderNotificationsDropdown = () => (
+    <div 
+      className="notificationsDropdown" 
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="notificationsDropdownHeader">
+        <h4 className="notifHeaderTitle">Notifications</h4>
+        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          {unreadCount > 0 && (
+            <span 
+              onClick={(e) => { e.stopPropagation(); markAllAsRead && markAllAsRead(); }} 
+              className="notifMarkReadBtn"
+            >
+              Mark all read
+            </span>
+          )}
+          {(notifications || []).length > 0 && (
+            <span 
+              onClick={(e) => { e.stopPropagation(); clearAllNotifications && clearAllNotifications(); }} 
+              className="notifClearAllBtn"
+            >
+              Clear All
+            </span>
+          )}
+        </div>
+      </div>
+      
+      {(notifications || []).length === 0 ? (
+        <span className="notifEmptyText">No new notifications</span>
+      ) : (
+        notifications.map((n, i) => (
+          <div 
+            key={n._id || n.id || i} 
+            className={`notifItem ${n.isRead ? 'read' : 'unread'}`}
+            onClick={() => handleItemClick(n)}
+          >
+            <img 
+              src={n.senderProfilePicture ? resolvePath(n.senderProfilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg"} 
+              alt="" 
+              className="notifAvatar"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenNotifications(false);
+                if (markAsRead) markAsRead(n._id || n.id);
+                navigate(`/profile/${n.senderName}`);
+              }}
+            />
+            <div style={{ flex: 1, fontSize: "13px", lineHeight: "1.4" }}>
+              <div>
+                <span className="notifSenderName">{n.senderName}</span>{" "}
+                <span className="notifActionText">{getNotificationText(n)}</span>
+              </div>
+              <div className="notifTimestamp">
+                {n.createdAt ? format(n.createdAt) : "Just now"}
+              </div>
+            </div>
+            <Close 
+              className="notifCloseIcon"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (deleteNotification) deleteNotification(n._id || n.id);
+              }} 
+            />
+          </div>
+        ))
+      )}
+    </div>
+  );
+
+  const renderProfileDropdown = () => (
+    <div className="profileDropdownMenu" onClick={(e) => e.stopPropagation()}>
+      {user ? (
+        <>
+          <div className="profileDropdownUserHeader">
+            <span className="profileDropdownName">{user.username}</span>
+            <span className="profileDropdownEmail">Zakora Member</span>
+          </div>
+          <div 
+            className="profileDropdownItem"
+            onClick={() => {
+              setProfileMenuOpen(false);
+              navigate(`/profile/${user.username}`);
+            }}
+          >
+            <Person style={{ fontSize: "19px" }} />
+            <span>Profile</span>
+          </div>
+          <div 
+            className="profileDropdownItem"
+            onClick={() => {
+              toggleTheme();
+            }}
+          >
+            {darkMode ? (
+              <LightMode style={{ fontSize: "19px", color: "#facc15" }} />
+            ) : (
+              <DarkMode style={{ fontSize: "19px", color: "#6366f1" }} />
+            )}
+            <span>{darkMode ? "Light Theme" : "Dark Theme"}</span>
+          </div>
+          <div 
+            className="profileDropdownItem profileDropdownLogout"
+            onClick={() => {
+              setProfileMenuOpen(false);
+              handleLogout();
+            }}
+          >
+            <Logout style={{ fontSize: "19px" }} />
+            <span>Logout</span>
+          </div>
+        </>
+      ) : (
+        <>
+          <div 
+            className="profileDropdownItem"
+            onClick={() => {
+              toggleTheme();
+            }}
+          >
+            {darkMode ? (
+              <LightMode style={{ fontSize: "19px", color: "#facc15" }} />
+            ) : (
+              <DarkMode style={{ fontSize: "19px", color: "#6366f1" }} />
+            )}
+            <span>{darkMode ? "Light Theme" : "Dark Theme"}</span>
+          </div>
+          <div 
+            className="profileDropdownItem"
+            onClick={() => {
+              setProfileMenuOpen(false);
+              navigate("/login");
+            }}
+          >
+            <LoginIcon style={{ fontSize: "19px" }} />
+            <span>Login</span>
+          </div>
+          <div 
+            className="profileDropdownItem"
+            onClick={() => {
+              setProfileMenuOpen(false);
+              navigate("/register");
+            }}
+          >
+            <Person style={{ fontSize: "19px" }} />
+            <span>Register</span>
+          </div>
+        </>
+      )}
+    </div>
+  );
+
   return (
     <div className="topbarContainer">
       {/* DESKTOP TOPBAR */}
@@ -147,24 +311,21 @@ const Topbar = () => {
           </form>
         </div>
         <div className="topbarRight">
-          <div className="topbarLinks">
-            {user ? (
-              <span className="topbarLink" onClick={handleLogout} style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                <Logout style={{ fontSize: "18px" }} /> Logout
-              </span>
-            ) : (
-              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                <Link to="/login" style={{ textDecoration: "none", color: "#4f46e5", fontWeight: "600", fontSize: "13.5px", padding: "6px 14px", borderRadius: "8px", border: "1px solid #4f46e5" }}>
-                  Login
-                </Link>
-                <Link to="/register" style={{ textDecoration: "none", backgroundColor: "#4f46e5", color: "#ffffff", fontWeight: "600", fontSize: "13.5px", padding: "6px 14px", borderRadius: "8px" }}>
-                  Register
-                </Link>
-              </div>
-            )}
-          </div>
-
           <div className="topbarIcons">
+            <button 
+              type="button"
+              className="themeToggleBtn"
+              onClick={toggleTheme}
+              title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              aria-label="Toggle Theme"
+            >
+              {darkMode ? (
+                <LightMode className="themeToggleIcon" />
+              ) : (
+                <DarkMode className="themeToggleIcon" />
+              )}
+            </button>
+
             <div 
               ref={notificationRef}
               className="topbarIconItem" 
@@ -174,100 +335,33 @@ const Topbar = () => {
             >
               <Notifications />
               {unreadCount > 0 && <span className="topbarIconBadge">{unreadCount}</span>}
-              
-              {openNotifications && (
-                <div 
-                  className="notificationsDropdown" 
-                  style={{ position: "absolute", top: "45px", right: "-10px", backgroundColor: "white", color: "black", width: "340px", maxWidth: "90vw", borderRadius: "10px", boxShadow: "0px 10px 25px -5px rgba(0,0,0,0.15)", zIndex: 999, padding: "15px", maxHeight: "420px", overflowY: "auto", border: "1px solid #f1f5f9" }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #e2e8f0", paddingBottom: "10px", marginBottom: "10px" }}>
-                    <h4 style={{ margin: 0, fontSize: "15px", fontWeight: "700", color: "#1e293b" }}>Notifications</h4>
-                    <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                      {unreadCount > 0 && (
-                        <span 
-                          onClick={(e) => { e.stopPropagation(); markAllAsRead && markAllAsRead(); }} 
-                          style={{ fontSize: "12px", color: "#4f46e5", cursor: "pointer", fontWeight: "600" }}
-                        >
-                          Mark all read
-                        </span>
-                      )}
-                      {(notifications || []).length > 0 && (
-                        <span 
-                          onClick={(e) => { e.stopPropagation(); clearAllNotifications && clearAllNotifications(); }} 
-                          style={{ fontSize: "12px", color: "#ef4444", cursor: "pointer", fontWeight: "600" }}
-                        >
-                          Clear All
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {(notifications || []).length === 0 ? (
-                    <span style={{ fontSize: "14px", color: "#94a3b8", display: "block", textAlign: "center", margin: "25px 0" }}>No new notifications</span>
-                  ) : (
-                    notifications.map((n, i) => (
-                      <div 
-                        key={n._id || n.id || i} 
-                        style={{ 
-                          display: "flex", 
-                          alignItems: "center", 
-                          padding: "10px", 
-                          borderBottom: "1px solid #f1f5f9", 
-                          gap: "10px", 
-                          cursor: "pointer", 
-                          backgroundColor: n.isRead ? "white" : "#eef2ff", 
-                          borderRadius: "8px", 
-                          marginBottom: "5px",
-                          transition: "background-color 0.2s ease"
-                        }} 
-                        onClick={() => handleItemClick(n)}
-                      >
-                        <img 
-                          src={n.senderProfilePicture ? resolvePath(n.senderProfilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg"} 
-                          alt="" 
-                          style={{ width: "38px", height: "38px", borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setOpenNotifications(false);
-                            if (markAsRead) markAsRead(n._id || n.id);
-                            navigate(`/profile/${n.senderName}`);
-                          }}
-                        />
-                        <div style={{ flex: 1, fontSize: "13px", lineHeight: "1.4" }}>
-                          <div>
-                            <span style={{ fontWeight: "600", color: "#1e293b" }}>{n.senderName}</span>{" "}
-                            <span style={{ color: "#475569" }}>{getNotificationText(n)}</span>
-                          </div>
-                          <div style={{ fontSize: "11px", color: "#94a3b8", marginTop: "2px" }}>
-                            {n.createdAt ? format(n.createdAt) : "Just now"}
-                          </div>
-                        </div>
-                        <Close 
-                          style={{ fontSize: "18px", color: "#94a3b8", padding: "3px", cursor: "pointer", flexShrink: 0 }} 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (deleteNotification) deleteNotification(n._id || n.id);
-                          }} 
-                        />
-                      </div>
-                    ))
-                  )}
-                </div>
-              )}
+              {openNotifications && renderNotificationsDropdown()}
             </div>
           </div>
 
-          <Link to={profileLink} title={user ? user.username : "Login"}>
-            <img src={profileImage} alt="" className="topbarImg" />
-          </Link>
+          {/* Profile Picture with Dropdown Menu */}
+          <div ref={profileMenuRef} style={{ position: "relative" }}>
+            <img 
+              src={profileImage} 
+              alt={user?.username || "User"} 
+              className="topbarImg" 
+              onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+              title={user ? `${user.username} (Click for menu)` : "Menu"}
+              style={{ cursor: "pointer" }}
+            />
+            {profileMenuOpen && renderProfileDropdown()}
+          </div>
         </div>
       </div>
 
       {/* MOBILE TOPBAR */}
       <div className="topbarMobile">
-        <div className="mobileLeft" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-          {isMobileMenuOpen ? <Close className="mobileHamburgerIcon" /> : <Menu className="mobileHamburgerIcon" />}
+        <div className="mobileLeft" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} title="Menu">
+          {isMobileMenuOpen ? (
+            <Close className="mobileHamburgerIcon" style={{ color: darkMode ? "#f8fafc" : "#111827", fontSize: "28px" }} />
+          ) : (
+            <Menu className="mobileHamburgerIcon" style={{ color: darkMode ? "#f8fafc" : "#111827", fontSize: "28px" }} />
+          )}
         </div>
         <div className="mobileCenter">
           <form className="searchBar" onSubmit={handleSearch} style={{margin: "0", height: "35px", width: "100%"}}>
@@ -283,37 +377,37 @@ const Topbar = () => {
         </div>
         <div className="mobileRight">
           <div 
+            ref={mobileNotificationRef}
             className="topbarIconItem" 
             onClick={handleNotificationClick} 
             style={{cursor: "pointer", position: "relative", display: "flex", alignItems: "center"}}
             title="Notifications"
           >
-            <Notifications style={{ fontSize: "22px", color: "white" }} />
+            <Notifications style={{ fontSize: "22px", color: darkMode ? "#f8fafc" : "#4b5563" }} />
             {unreadCount > 0 && <span className="topbarIconBadge">{unreadCount}</span>}
+            {openNotifications && renderNotificationsDropdown()}
           </div>
-          <Link to={profileLink} style={{display: "flex"}}>
-            <img src={profileImage} alt="" className="mobileAvatarImg" />
-          </Link>
+          
+          <div ref={mobileProfileMenuRef} style={{ position: "relative" }}>
+            <img 
+              src={profileImage} 
+              alt={user?.username || "User"} 
+              className="mobileAvatarImg" 
+              onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+              style={{ cursor: "pointer" }}
+              title="Menu"
+            />
+            {profileMenuOpen && renderProfileDropdown()}
+          </div>
         </div>
       </div>
 
-      {/* MOBILE MENU OVERLAY */}
+      {/* MOBILE MENU OVERLAY (HAMBURGER DRAWER - CLEANED) */}
       {isMobileMenuOpen && (
         <div className="mobileMenuOverlay">
           <div className="mobileMenuHeader">
             <Link to="/" onClick={() => setIsMobileMenuOpen(false)} style={{textDecoration:"none"}}><span className="logo">ZakoraSocial</span></Link>
           </div>
-
-          {user ? (
-            <div style={{padding: "0 20px", marginTop: "10px", display: "flex", gap: "15px"}}>
-               <button style={{padding: "8px 16px", backgroundColor: "#ef4444", color: "white", border: "none", borderRadius: "8px", fontWeight: "600", width: "100%"}} onClick={handleLogout}>Logout</button>
-            </div>
-          ) : (
-            <div style={{padding: "0 20px", marginTop: "10px", display: "flex", gap: "10px"}}>
-               <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} style={{textAlign: "center", flex: 1, padding: "8px 16px", border: "1px solid #4f46e5", color: "#4f46e5", borderRadius: "8px", fontWeight: "600", textDecoration: "none"}}>Login</Link>
-               <Link to="/register" onClick={() => setIsMobileMenuOpen(false)} style={{textAlign: "center", flex: 1, padding: "8px 16px", backgroundColor: "#4f46e5", color: "white", borderRadius: "8px", fontWeight: "600", textDecoration: "none"}}>Register</Link>
-            </div>
-          )}
 
           <div className="mobileMenuSidebarWrapper">
              <Sidebar />

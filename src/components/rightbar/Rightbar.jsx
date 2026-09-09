@@ -97,17 +97,6 @@ const Rightbar = ({ user }) => {
       } else {
         await axios.put("/users/" + user._id + "/follow", { userId: currentUser._id });
         dispatch({ type: "FOLLOW", payload: user._id });
-        if (socket) {
-          socket.emit("sendNotification", {
-            senderId: currentUser._id,
-            senderName: currentUser.username,
-            senderProfilePicture: currentUser.profilePicture,
-            receiverId: user._id,
-            receiverName: user.username,
-            type: "follow",
-            text: "started following you.",
-          });
-        }
       }
       setFollowed(!followed);
     } catch (err) {
@@ -124,17 +113,6 @@ const Rightbar = ({ user }) => {
     try {
       await axios.put("/users/" + c._id + "/follow", { userId: currentUser._id });
       dispatch({ type: "FOLLOW", payload: c._id });
-      if (socket) {
-        socket.emit("sendNotification", {
-          senderId: currentUser._id,
-          senderName: currentUser.username,
-          senderProfilePicture: currentUser.profilePicture,
-          receiverId: c._id,
-          receiverName: c.username,
-          type: "follow",
-          text: "started following you.",
-        });
-      }
       if (user?._id === currentUser._id) {
         setConnections(prev => ({
           ...prev,
@@ -179,7 +157,7 @@ const Rightbar = ({ user }) => {
 
             return (
               <div key={c._id} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <Link style={{ textDecoration: "none", color: "black" }} to={"/profile/" + c.username}>
+                <Link style={{ textDecoration: "none", color: "inherit" }} to={"/profile/" + c.username}>
                   <div className="rightbarFollowing">
                     <img src={c.profilePicture ? resolvePath(c.profilePicture) : "/assets/person/noAvatar.jpg"} alt="" className="rightbarFollowingImg" />
                     <span className="rightbarFollowingName">{c.username}</span>
@@ -196,7 +174,7 @@ const Rightbar = ({ user }) => {
               </div>
             );
           })}
-          {list.length === 0 && <span style={{ color: "gray", fontSize: "13px" }}>No users yet.</span>}
+          {list.length === 0 && <span className="rightbarEmptyText">No users yet.</span>}
         </div>
       </div>
     );
@@ -288,7 +266,7 @@ const Rightbar = ({ user }) => {
           )}
         </div>
 
-        <hr style={{ margin: "20px 0", border: "none", borderTop: "1px solid #eee" }} />
+        <hr className="rightbarDivider" />
 
         {renderConnectionSection("Friends", connections.mutuals)}
         {renderConnectionSection("Followers", connections.followers)}
@@ -313,43 +291,16 @@ const Rightbar = ({ user }) => {
       <>
         {/* Unauthenticated Guest Join Banner */}
         {!currentUser && (
-          <div style={{
-            backgroundColor: "#ffffff",
-            border: "1px solid #e2e8f0",
-            borderRadius: "16px",
-            padding: "20px",
-            marginBottom: "20px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
-            textAlign: "center"
-          }}>
-            <h4 style={{ margin: "0 0 8px 0", color: "#111827", fontSize: "16px", fontWeight: "700" }}>New to ZakoraSocial?</h4>
-            <p style={{ margin: "0 0 16px 0", color: "#6b7280", fontSize: "13px", lineHeight: "1.5" }}>
+          <div className="rightbarGuestCard">
+            <h4 className="rightbarGuestTitle">New to ZakoraSocial?</h4>
+            <p className="rightbarGuestDesc">
               Sign in to like posts, share moments, and connect with friends!
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <Link to="/login" style={{
-                display: "block",
-                background: "linear-gradient(135deg, #4f46e5, #6366f1)",
-                color: "white",
-                textDecoration: "none",
-                padding: "10px",
-                borderRadius: "10px",
-                fontWeight: "600",
-                fontSize: "13.5px"
-              }}>
+              <Link to="/login" className="rightbarGuestLoginBtn">
                 Sign In
               </Link>
-              <Link to="/register" style={{
-                display: "block",
-                backgroundColor: "#f8fafc",
-                color: "#4f46e5",
-                border: "1px solid #c7d2fe",
-                textDecoration: "none",
-                padding: "9px",
-                borderRadius: "10px",
-                fontWeight: "600",
-                fontSize: "13.5px"
-              }}>
+              <Link to="/register" className="rightbarGuestRegisterBtn">
                 Create Free Account
               </Link>
             </div>

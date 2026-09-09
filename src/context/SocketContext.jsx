@@ -160,10 +160,10 @@ export const SocketContextProvider = ({ children }) => {
 
     try {
       const newSocket = io(SOCKET_URL, {
-        transports: ["websocket", "polling"],
-        reconnectionAttempts: 3,
-        reconnectionDelay: 3000,
-        timeout: 5000,
+        transports: ["polling", "websocket"],
+        reconnectionAttempts: 5,
+        reconnectionDelay: 2000,
+        timeout: 10000,
       });
 
       newSocket.on("connect", () => {
@@ -175,7 +175,14 @@ export const SocketContextProvider = ({ children }) => {
       });
 
       newSocket.on("getNotification", (data) => {
-        const notifId = data._id || data.id || (Date.now() + Math.random().toString());
+        if (!data) return;
+        const notifId = data._id || data.id || (`notif_${data.senderId}_${data.type}_${data.postId || ""}`);
+
+        // If this exact DB notification ID was already handled, skip
+        if (data._id && knownNotificationIds.current.has(data._id)) {
+          return;
+        }
+
         const formattedNotif = {
           ...data,
           _id: notifId,
@@ -184,17 +191,35 @@ export const SocketContextProvider = ({ children }) => {
           createdAt: data.createdAt || new Date().toISOString(),
         };
 
+        if (data._id) {
+          knownNotificationIds.current.add(data._id);
+        }
         knownNotificationIds.current.add(notifId);
 
+        let isDuplicate = false;
         setNotifications((prev) => {
-          // Avoid duplicate entry
-          if (prev.some((n) => (n._id && n._id === notifId) || (n.id && n.id === notifId))) {
+          // Avoid duplicate entry by ID or by same sender/type/post within 5 seconds
+          if (
+            prev.some(
+              (n) =>
+                (n._id && (n._id === notifId || n._id === data._id)) ||
+                (n.id && (n.id === notifId || n.id === data._id)) ||
+                (n.senderId &&
+                  n.senderId === data.senderId &&
+                  n.type === data.type &&
+                  (n.postId || "") === (data.postId || "") &&
+                  Math.abs(new Date(n.createdAt) - new Date(formattedNotif.createdAt)) < 5000)
+            )
+          ) {
+            isDuplicate = true;
             return prev;
           }
           return [formattedNotif, ...prev];
         });
 
-        showToastNotification(formattedNotif);
+        if (!isDuplicate) {
+          showToastNotification(formattedNotif);
+        }
       });
 
       setSocket(newSocket);

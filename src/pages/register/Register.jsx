@@ -5,6 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { AddAPhoto } from '@mui/icons-material';
+import Topbar from '../../components/topbar/Topbar';
 
 const Register = () => {
     const username = useRef();
@@ -68,8 +69,10 @@ const Register = () => {
     }
 
     return (
-        <div className="login">
-            <div className="loginCard">
+        <>
+            <Topbar />
+            <div className="login">
+                <div className="loginCard">
                 <div className="loginHeader">
                     <h1 className="loginLogo">ZakoraSocial</h1>
                     <p className="loginDesc">Create a new account.</p>
@@ -191,6 +194,7 @@ const Register = () => {
                 </p>
             </div>
         </div>
+        </>
     )
 }
 

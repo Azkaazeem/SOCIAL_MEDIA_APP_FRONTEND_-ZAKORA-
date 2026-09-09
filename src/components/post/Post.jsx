@@ -1,6 +1,6 @@
 import { useState , useEffect, useContext } from 'react';
 import './post.css'
-import { MoreVert, Favorite, FavoriteBorder, Chat } from '@mui/icons-material';
+import { MoreVert, Favorite, FavoriteBorder, Chat, Close } from '@mui/icons-material';
 import axios from "axios";
 import { format } from "timeago.js";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,6 +19,9 @@ const Post = ({ post }) => {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [showComments, setShowComments] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
+  const [showLikesModal, setShowLikesModal] = useState(false);
+  const [likedUsers, setLikedUsers] = useState([]);
+  const [loadingLikes, setLoadingLikes] = useState(false);
 
   const PF = import.meta.env.VITE_PUBLIC_FOLDER || "/assets/";
   const resolvePath = (path) => path ? (path.startsWith("http") ? path : (PF.endsWith("/") ? PF : PF + "/") + (path.startsWith("/") ? path.slice(1) : path)) : null;
@@ -82,19 +85,6 @@ const Post = ({ post }) => {
     try {
       await axios.put("/posts/" + post._id + "/like", { userId: currentUser._id });
       
-      // If we are liking the post (and it's not our own post)
-      if (!isLiked && socket && currentUser._id !== post.userId) {
-        socket.emit("sendNotification", {
-          senderId: currentUser._id,
-          senderName: currentUser.username,
-          senderProfilePicture: currentUser.profilePicture,
-          receiverId: post.userId,
-          receiverName: user.username,
-          type: "like",
-          postId: post._id,
-          text: "liked your post.",
-        });
-      }
     } catch (err) {
       console.error(err);
     }
@@ -124,6 +114,20 @@ const Post = ({ post }) => {
       }
     });
   }
+
+  const handleOpenLikes = async () => {
+    setShowLikesModal(true);
+    setLoadingLikes(true);
+    try {
+      const res = await axios.get(`/posts/${post._id}/likes`);
+      setLikedUsers(res.data || []);
+    } catch (err) {
+      console.error("Failed to load likes:", err);
+      setLikedUsers([]);
+    } finally {
+      setLoadingLikes(false);
+    }
+  };
   
   return (
     <div className='post'>
@@ -195,7 +199,13 @@ const Post = ({ post }) => {
             ) : (
               <FavoriteBorder htmlColor="red" onClick={likeHandler} className="likeIcon" style={{ cursor: "pointer", fontSize: "24px", marginRight: "5px" }} />
             )}
-            <span className='postLikeCounter'>{like} people like it</span>
+            <span 
+              className='postLikeCounter' 
+              onClick={handleOpenLikes}
+              title="Click to view who liked this post"
+            >
+              {like} {like === 1 ? "person likes it" : "people like it"}
+            </span>
           </div>
 
           <div 
@@ -217,6 +227,67 @@ const Post = ({ post }) => {
             postId={post._id}
             onCommentCountChange={(newCount) => setCommentCount(newCount)}
           />
+        )}
+
+        {/* Likes Modal Popup */}
+        {showLikesModal && (
+          <div className="likesModalOverlay" onClick={() => setShowLikesModal(false)}>
+            <div className="likesModal" onClick={(e) => e.stopPropagation()}>
+              <div className="likesModalHeader">
+                <div className="likesModalHeaderTitle">
+                  <Favorite style={{ color: "#ef4444", fontSize: "20px" }} />
+                  <span>Liked by ({like})</span>
+                </div>
+                <button
+                  type="button"
+                  className="likesModalCloseBtn"
+                  onClick={() => setShowLikesModal(false)}
+                  title="Close"
+                  aria-label="Close"
+                >
+                  <Close style={{ fontSize: "18px" }} />
+                </button>
+              </div>
+
+              <div className="likesModalBody">
+                {loadingLikes ? (
+                  <div className="likesModalLoading">Loading likes...</div>
+                ) : likedUsers.length === 0 ? (
+                  <div className="likesModalEmpty">
+                    {like > 0
+                      ? "Liked by users on ZakoraSocial"
+                      : "No likes yet. Be the first to like this post!"}
+                  </div>
+                ) : (
+                  <div className="likesModalList">
+                    {likedUsers.map((u) => (
+                      <div
+                        key={u._id}
+                        className="likesModalUserItem"
+                        onClick={() => {
+                          setShowLikesModal(false);
+                          navigate(`/profile/${u.username}`);
+                        }}
+                      >
+                        <img
+                          src={u.profilePicture ? resolvePath(u.profilePicture) : "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg"}
+                          alt={u.username}
+                          className="likesModalUserImg"
+                          onError={(e) => {
+                            e.target.src = "https://i.pinimg.com/736x/2c/3b/f6/2c3bf6dcf64197a30ee1efea7d198ddd.jpg";
+                          }}
+                        />
+                        <div className="likesModalUserInfo">
+                          <span className="likesModalUsername">{u.username}</span>
+                          {u.desc && <span className="likesModalDesc">{u.desc}</span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

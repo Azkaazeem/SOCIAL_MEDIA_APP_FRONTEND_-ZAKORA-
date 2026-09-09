@@ -94,3 +94,34 @@
     list-style: none;
 }
 
+.sidebarSearchContainer {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.sidebarSearchContainer:focus-within {
+    background-color: #ffffff;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+
+.sidebarSearchInput {
+    border: none;
+    background-color: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+    color: #111827;
+    font-family: inherit;
+}
+
+.sidebarSearchInput::placeholder {
+    color: #9ca3af;
+}
+

@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 import { AuthContextProvider } from "./context/AuthContext";
 import { SocketContextProvider } from "./context/SocketContext";
+import { ThemeContextProvider } from "./context/ThemeContext";
+import "./theme.css";
 import axios from "axios";
 
 // local link || deploy link
@@ -16,7 +18,9 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthContextProvider>
       <SocketContextProvider>
-        <App/>
+        <ThemeContextProvider>
+          <App/>
+        </ThemeContextProvider>
       </SocketContextProvider>
     </AuthContextProvider>
   </StrictMode>,

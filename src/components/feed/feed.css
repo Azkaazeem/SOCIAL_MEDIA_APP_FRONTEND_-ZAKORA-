@@ -6,6 +6,85 @@
     padding: 20px;
 }
 
+/* Guest user welcome banner */
+.feedGuestBanner {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 18px 22px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.feedGuestText {
+    flex: 1;
+    min-width: 200px;
+}
+
+.feedGuestTitle {
+    margin: 0 0 4px 0;
+    color: #111827;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.feedGuestDesc {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13.5px;
+    line-height: 1.5;
+}
+
+.feedGuestButtons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.feedGuestLoginBtn {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #ffffff;
+    padding: 9px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13.5px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+    white-space: nowrap;
+}
+
+.feedGuestLoginBtn:hover {
+    background: linear-gradient(135deg, #4338ca, #4f46e5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+
+.feedGuestRegisterBtn {
+    background-color: #f8fafc;
+    border: 1px solid #c7d2fe;
+    color: #4f46e5;
+    padding: 8px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13.5px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.feedGuestRegisterBtn:hover {
+    background-color: #eef2ff;
+    border-color: #a5b4fc;
+    transform: translateY(-1px);
+}
+
 @media screen and (max-width: 768px) {
     .feed {
         flex: auto;

@@ -116,49 +116,20 @@ const Feed = ({ username }) => {
       <div className="feedWrapper">
         {/* Guest user welcome banner */}
         {!user && !username && (
-          <div style={{
-            backgroundColor: "#ffffff",
-            border: "1px solid #e2e8f0",
-            borderRadius: "16px",
-            padding: "18px 22px",
-            marginBottom: "20px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "12px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.03)"
-          }}>
-            <div>
-              <h3 style={{ margin: "0 0 4px 0", color: "#111827", fontSize: "16px", fontWeight: "700" }}>
+          <div className="feedGuestBanner">
+            <div className="feedGuestText">
+              <h3 className="feedGuestTitle">
                 Welcome to ZakoraSocial! 👋
               </h3>
-              <p style={{ margin: 0, color: "#6b7280", fontSize: "13.5px" }}>
+              <p className="feedGuestDesc">
                 You are browsing as a guest. Sign in to like posts, comment, and share your own stories.
               </p>
             </div>
-            <div style={{ display: "flex", gap: "10px" }}>
-              <Link to="/login" style={{
-                background: "linear-gradient(135deg, #4f46e5, #6366f1)",
-                color: "#ffffff",
-                padding: "8px 18px",
-                borderRadius: "8px",
-                textDecoration: "none",
-                fontWeight: "600",
-                fontSize: "13px"
-              }}>
+            <div className="feedGuestButtons">
+              <Link to="/login" className="feedGuestLoginBtn">
                 Log In
               </Link>
-              <Link to="/register" style={{
-                backgroundColor: "#f8fafc",
-                border: "1px solid #c7d2fe",
-                color: "#4f46e5",
-                padding: "8px 18px",
-                borderRadius: "8px",
-                textDecoration: "none",
-                fontWeight: "600",
-                fontSize: "13px"
-              }}>
+              <Link to="/register" className="feedGuestRegisterBtn">
                 Sign Up
               </Link>
             </div>
