@@ -155,7 +155,7 @@ export const SocketContextProvider = ({ children }) => {
     }
 
     const SOCKET_URL = customSocketUrl || (import.meta.env.PROD
-      ? "https://social-media-app-backend-lqhqmwhkm-azka-azeems-projects.vercel.app"
+      ? "https://social-media-app-backend-n76p5e555-azka-azeems-projects.vercel.app"
       : "http://localhost:8800");
 
     try {
