@@ -20,11 +20,11 @@ const Login = () => {
   // Sync context error with local error banner
   useEffect(() => {
     if (error) {
-      setErrorMessage(
-        typeof error === 'string'
-          ? error
-          : error?.response?.data?.message || "Invalid email or password. Please try again."
-      );
+      const serverData = error?.response?.data;
+      const message = typeof serverData === 'string'
+        ? serverData
+        : serverData?.message || (typeof error === 'string' ? error : "Invalid email or password. Please try again.");
+      setErrorMessage(message);
     }
   }, [error]);
 
