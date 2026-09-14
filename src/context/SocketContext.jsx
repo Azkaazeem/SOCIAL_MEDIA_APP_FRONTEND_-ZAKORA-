@@ -147,16 +147,19 @@ export const SocketContextProvider = ({ children }) => {
     // we bypass socket.io to eliminate continuous console errors.
     // Notifications continue working reliably via the 12-second REST polling above.
     const customSocketUrl = import.meta.env.VITE_SOCKET_URL;
-    const isVercelHost = import.meta.env.PROD && !customSocketUrl;
-
-    if (isVercelHost) {
-      // In Vercel production, socket connection is bypassed in favor of REST polling
-      return;
-    }
-
     const SOCKET_URL = customSocketUrl || (import.meta.env.PROD
       ? "https://social-media-app-backend-n76p5e555-azka-azeems-projects.vercel.app"
       : "http://localhost:8800");
+
+    // Vercel Serverless Functions do not support persistent WebSockets/Socket.IO.
+    // If running against a Vercel deployment (*.vercel.app), bypass socket.io to eliminate continuous 404 console errors.
+    // Real-time notifications continue working reliably via the 12-second REST polling above.
+    const isVercel = Boolean(SOCKET_URL && SOCKET_URL.includes("vercel.app"));
+
+    if (isVercel) {
+      // In Vercel production, socket connection is bypassed in favor of REST polling
+      return;
+    }
 
     try {
       const newSocket = io(SOCKET_URL, {

@@ -6,6 +6,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { AddAPhoto } from '@mui/icons-material';
 import Topbar from '../../components/topbar/Topbar';
+import { uploadFile } from '../../utils/upload';
 
 const Register = () => {
     const username = useRef();
@@ -42,15 +43,11 @@ const Register = () => {
         }
 
         if (file) {
-            const data = new FormData();
-            const fileName = Date.now() + file.name;
-            data.append("name", fileName);
-            data.append("file", file);
             try {
-                const res = await axios.post("/upload", data);
-                user.profilePicture = res.data.url;
+                const cloudUrl = await uploadFile(file);
+                user.profilePicture = cloudUrl;
             } catch (err) {
-                console.log(err);
+                console.log("Profile picture upload error:", err);
             }
         }
 

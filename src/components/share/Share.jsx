@@ -4,6 +4,7 @@ import { PermMedia, PlayCircle, Article, Cancel, Visibility, Edit } from "@mui/i
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import FormattedContent from "../formattedContent/FormattedContent";
+import { uploadFile } from "../../utils/upload";
 
 const Share = () => {
     const { user } = useContext(AuthContext);
@@ -71,14 +72,8 @@ const Share = () => {
 
             if (files.length > 0) {
                 await Promise.all(files.map(async (f) => {
-                    const data = new FormData();
-                    const filename = Date.now() + "_" + f.name;
-                    data.append("name", filename);
-                    data.append("file", f);
                     try {
-                        const res = await axios.post("/upload", data);
-                        const cloudUrl = res.data?.url || filename;
-                        
+                        const cloudUrl = await uploadFile(f);
                         if (f.type.startsWith("image/")) {
                             newPost.img.push(cloudUrl);
                         } else if (f.type.startsWith("video/")) {

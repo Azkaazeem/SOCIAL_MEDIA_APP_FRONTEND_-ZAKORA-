@@ -8,6 +8,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { AddAPhoto } from "@mui/icons-material";
+import { uploadFile } from "../../utils/upload";
 
 const Profile = () => {
   const PF = import.meta.env.VITE_PUBLIC_FOLDER || "/assets/";
@@ -36,15 +37,10 @@ const Profile = () => {
   const handleImageUpdate = async (e, type) => {
     const file = e.target.files[0];
     if (file) {
-      const data = new FormData();
-      const fileName = Date.now() + "_" + file.name;
-      data.append("name", fileName);
-      data.append("file", file);
-      
       try {
-        const res = await axios.post("/upload", data);
+        const cloudUrl = await uploadFile(file);
         const updateData = { userId: currentUser._id };
-        updateData[type] = res.data?.url || fileName;
+        updateData[type] = cloudUrl;
         
         await axios.put(`/users/${currentUser._id}`, updateData);
         // Update local context
