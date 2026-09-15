@@ -9,7 +9,7 @@ import axios from "axios";
 
 // local link || deploy link
 const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD 
-  ? "https://social-media-app-backend-n76p5e555-azka-azeems-projects.vercel.app/api" 
+  ? "https://social-media-app-backend-tan.vercel.app/api" 
   : "http://localhost:8800/api");
 
 axios.defaults.baseURL = API_URL;

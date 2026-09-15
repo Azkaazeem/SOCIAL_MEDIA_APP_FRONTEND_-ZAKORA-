@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import FormattedContent from "../formattedContent/FormattedContent";
 import { uploadFile } from "../../utils/upload";
+import Swal from "sweetalert2";
 
 const Share = () => {
     const { user } = useContext(AuthContext);
@@ -59,33 +60,81 @@ const Share = () => {
         if (isSharing) return;
 
         const postDesc = isArticle ? articleText : (desc.current?.value || "");
-        if (!postDesc.trim() && files.length === 0) return;
+        if (!postDesc.trim() && files.length === 0) {
+            Swal.fire({
+                icon: "warning",
+                title: "Empty Post",
+                text: "Please write something or select a photo/video before sharing.",
+                confirmButtonColor: "#1775ee"
+            });
+            return;
+        }
 
         setIsSharing(true);
+
+        const hasVideo = files.some(f => f.type?.startsWith("video/"));
+        if (files.length > 0) {
+            Swal.fire({
+                title: hasVideo ? "Uploading Video..." : "Uploading Media...",
+                text: "Please wait while your files are uploaded to the cloud.",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        }
+
         try {
+            const uploadedImg = [];
+            const uploadedVideo = [];
+
+            if (files.length > 0) {
+                for (let i = 0; i < files.length; i++) {
+                    const f = files[i];
+                    if (files.length > 1) {
+                        Swal.update({
+                            text: `Uploading file ${i + 1} of ${files.length}...`
+                        });
+                    }
+                    const cloudUrl = await uploadFile(f);
+                    if (!cloudUrl) {
+                        throw new Error(`Failed to upload ${f.name}. Please try again.`);
+                    }
+                    if (f.type.startsWith("image/")) {
+                        uploadedImg.push(cloudUrl);
+                    } else if (f.type.startsWith("video/")) {
+                        uploadedVideo.push(cloudUrl);
+                    }
+                }
+            }
+
+            // Guard against empty posts when files fail
+            if (!postDesc.trim() && uploadedImg.length === 0 && uploadedVideo.length === 0) {
+                throw new Error("No media or text to post. Upload aborted.");
+            }
+
             const newPost = {
                 userId: user._id,
                 desc: postDesc,
-                img: [],
-                video: []
+                img: uploadedImg,
+                video: uploadedVideo
             };
 
+            await axios.post("/posts", newPost);
+
             if (files.length > 0) {
-                await Promise.all(files.map(async (f) => {
-                    try {
-                        const cloudUrl = await uploadFile(f);
-                        if (f.type.startsWith("image/")) {
-                            newPost.img.push(cloudUrl);
-                        } else if (f.type.startsWith("video/")) {
-                            newPost.video.push(cloudUrl);
-                        }
-                    } catch (err) {
-                        console.error("Upload error:", err);
-                    }
-                }));
+                Swal.fire({
+                    icon: "success",
+                    title: "Posted!",
+                    text: "Your post has been shared successfully.",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
             }
 
-            await axios.post("/posts", newPost);
+            // Only clear state upon successful post creation
             if (desc.current) desc.current.value = "";
             setArticleText("");
             setIsPreview(false);
@@ -94,6 +143,13 @@ const Share = () => {
             window.dispatchEvent(new CustomEvent('postCreated'));
         } catch (err) {
             console.error("Post creation error:", err);
+            const errMsg = err.response?.data?.message || err.response?.data?.error || err.message || "Failed to upload media. Please try again.";
+            Swal.fire({
+                icon: "error",
+                title: "Upload Failed",
+                text: errMsg,
+                confirmButtonColor: "#1775ee"
+            });
         } finally {
             setIsSharing(false);
         }

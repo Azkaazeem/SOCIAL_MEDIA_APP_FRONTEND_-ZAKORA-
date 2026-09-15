@@ -190,6 +190,12 @@ const Post = ({ post }) => {
               ))}
             </div>
           )}
+
+          {post.video && typeof post.video === "string" && (
+            <div className="postVideosContainer" style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px" }}>
+              <AutoPlayVideo src={resolvePath(post.video)} />
+            </div>
+          )}
         </div>
 
         <div className="postBottom">

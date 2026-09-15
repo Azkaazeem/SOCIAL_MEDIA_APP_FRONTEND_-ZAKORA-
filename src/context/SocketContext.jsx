@@ -148,7 +148,7 @@ export const SocketContextProvider = ({ children }) => {
     // Notifications continue working reliably via the 12-second REST polling above.
     const customSocketUrl = import.meta.env.VITE_SOCKET_URL;
     const SOCKET_URL = customSocketUrl || (import.meta.env.PROD
-      ? "https://social-media-app-backend-n76p5e555-azka-azeems-projects.vercel.app"
+      ? "https://social-media-app-backend-tan.vercel.app"
       : "http://localhost:8800");
 
     // Vercel Serverless Functions do not support persistent WebSockets/Socket.IO.
