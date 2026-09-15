@@ -8,9 +8,16 @@ import "./theme.css";
 import axios from "axios";
 
 // local link || deploy link
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD 
-  ? "https://social-media-app-backend-tan.vercel.app/api" 
-  : "http://localhost:8800/api");
+let API_URL = import.meta.env.VITE_API_URL;
+
+if (import.meta.env.DEV) {
+  API_URL = "http://localhost:8800/api";
+} else {
+  // In production, guard against stale temporary deployment hashes
+  if (!API_URL || API_URL.includes("n76p5e555") || API_URL.includes("lqhqmwhkm") || API_URL.includes("9oqaddnz5")) {
+    API_URL = "https://social-media-app-backend-tan.vercel.app/api";
+  }
+}
 
 axios.defaults.baseURL = API_URL;
 
